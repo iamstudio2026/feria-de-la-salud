@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEISS - Evaluación Hospitales Tamaulipas 2024</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --guinda: #9b2247;
+            --guinda-dark: #611232;
+            --dorado: #a57f2c;
+            --verde: #1e5b4f;
+            --verde-dark: #002f2a;
+            --gris: #98989A;
+            --negro: #161a1d;
+            --dorado-claro: #e6d194;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(180deg, rgba(230, 209, 148, 0.08) 0%, #fff 100%);
+        }
+
+        .font-patria {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.25rem;
+            color: #fff;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-alto {
+            background: rgba(30, 91, 79, 0.12);
+            color: #1e5b4f;
+        }
+
+        .status-medio {
+            background: rgba(165, 127, 44, 0.12);
+            color: #a57f2c;
+        }
+
+        .status-bajo {
+            background: rgba(155, 34, 71, 0.12);
+            color: #9b2247;
+        }
+
+        .hospital-row {
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+
+        .hospital-row:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .hospital-row.selected {
+            box-shadow: 0 0 0 2px var(--guinda);
+        }
+
+        .filter-btn {
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+        }
+
+        .filter-btn.active-todas {
+            background: var(--negro);
+            color: #fff;
+            border-color: var(--negro);
+        }
+
+        .filter-btn.active-imss {
+            background: var(--verde);
+            color: #fff;
+            border-color: var(--verde);
+        }
+
+        .filter-btn.active-issste {
+            background: var(--guinda);
+            color: #fff;
+            border-color: var(--guinda);
+        }
+
+        .filter-btn.active-ordinario {
+            background: var(--dorado);
+            color: #fff;
+            border-color: var(--dorado);
+        }
+
+        .ranking-list {
+            max-height: 480px;
+            overflow-y: auto;
+        }
+
+        .ranking-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .ranking-list::-webkit-scrollbar-thumb {
+            background: var(--gris);
+            border-radius: 3px;
+        }
+
+        .detail-panel {
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .rec-card {
+            border: 1px solid rgba(30, 91, 79, 0.15);
+            background: rgba(30, 91, 79, 0.03);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .hallazgo-card {
+            border: 1px solid rgba(165, 127, 44, 0.2);
+            background: rgba(230, 209, 148, 0.08);
+            border-radius: 8px;
+            padding: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="mb-6">
+        <div class="bg-[#002f2a] text-white text-xs py-1 px-4 flex justify-center items-center gap-4">
+            <span>Secretaría de Salud Tamaulipas</span>
+            <span class="opacity-50">•</span>
+            <span>Comando Estatal Interinstitucional del Sector Salud</span>
+        </div>
+        <div class="h-1 w-full" style="background: linear-gradient(90deg, #1e5b4f 33%, #fff 33% 66%, #9b2247 66%)">
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 pb-12">
+        <!-- TITLE -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-patria font-bold text-[#161a1d]">Sistema de Evaluación CEISS</h1>
+            <p class="text-[#9b2247] font-medium mt-1">Hospitales de Tamaulipas — Evaluación 2024</p>
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="flex flex-wrap justify-center gap-2 mb-6" id="filterBar"></div>
+
+        <!-- STATS BAR -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="statsBar"></div>
+
+        <!-- MAIN GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- RANKING -->
+            <div class="lg:col-span-2 card">
+                <div class="card-header" style="background: linear-gradient(135deg, #9b2247, #611232)">
+                    <h3 class="text-xl font-semibold"><i class="fas fa-trophy mr-2"></i>Ranking de Hospitales</h3>
+                    <p class="text-[#e6d194] text-sm mt-1">Evaluación general ordenada por desempeño</p>
+                </div>
+                <div class="p-4 ranking-list" id="rankingList"></div>
+            </div>
+            <!-- PIE -->
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(135deg, #161a1d, #002f2a)">
+                    <h3 class="text-xl font-semibold"><i class="fas fa-chart-pie mr-2"></i>Distribución</h3>
+                    <p class="text-[#98989A] text-sm mt-1">Clasificación por nivel de desempeño</p>
+                </div>
+                <div class="p-4">
+                    <canvas id="pieChart" height="220"></canvas>
+                    <div class="grid grid-cols-3 gap-2 mt-4" id="pieStats"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DETAIL PANEL -->
+        <div id="detailPanel" class="hidden mb-8"></div>
+
+        <!-- CATEGORIES -->
+        <div class="card mb-8">
+            <div class="card-header" style="background: linear-gradient(135deg, #1e5b4f, #002f2a)">
+                <h3 class="text-xl font-semibold"><i class="fas fa-chart-bar mr-2"></i>Análisis por Categorías</h3>
+                <p class="text-[#e6d194] text-sm mt-1">Desempeño promedio en cada área evaluada</p>
+            </div>
+            <div class="p-6">
+                <canvas id="categoryChart" height="400"></canvas>
+            </div>
+        </div>
+
+        <!-- COMPARISON -->
+        <div class="card mb-8">
+            <div class="card-header" style="background: linear-gradient(135deg, #1e5b4f, #002f2a)">
+                <h3 class="text-xl font-semibold"><i class="fas fa-balance-scale mr-2"></i>Comparativa por Hospital</h3>
+                <p class="text-[#e6d194] text-sm mt-1">Selecciona una categoría para comparar</p>
+            </div>
+            <div class="p-6">
+                <select id="categorySelect" class="w-full md:w-96 p-2 border rounded-md mb-4"
+                    style="border-color: rgba(165,127,44,0.4)"></select>
+                <canvas id="comparisonChart" height="350"></canvas>
+            </div>
+        </div>
+
+        <!-- HALLAZGOS -->
+        <div class="card mb-8">
+            <div class="card-header" style="background: linear-gradient(135deg, #a57f2c, #611232)">
+                <h3 class="text-xl font-semibold"><i class="fas fa-exclamation-triangle mr-2"></i>Hallazgos Principales
+                </h3>
+                <p class="text-[#e6d194] text-sm mt-1">Problemas más frecuentes identificados</p>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="hallazgosList"></div>
+        </div>
+
+        <!-- RECOMENDACIONES -->
+        <div class="card mb-8">
+            <div class="card-header" style="background: linear-gradient(135deg, #002f2a, #161a1d)">
+                <h3 class="text-xl font-semibold"><i class="fas fa-lightbulb mr-2"></i>Recomendaciones de Mejora</h3>
+                <p class="text-[#e6d194] text-sm mt-1">Acciones sugeridas basadas en los hallazgos</p>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="rec-card">
+                    <h4 class="font-semibold text-[#002f2a] mb-3"><i class="fas fa-bolt mr-1 text-[#9b2247]"></i>
+                        Prioridades inmediatas</h4>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li class="flex items-start"><span
+                                class="w-5 h-5 rounded-full bg-[#1e5b4f] text-white flex-shrink-0 flex items-center justify-center mr-2 mt-0.5 text-xs">1</span>Implementar
+                            programa de fortalecimiento para personal especializado.</li>
+                        <li class="flex items-start"><span
+                                class="w-5 h-5 rounded-full bg-[#1e5b4f] text-white flex-shrink-0 flex items-center justify-center mr-2 mt-0.5 text-xs">2</span>Actualizar
+                            equipamiento médico esencial en hospitales con puntuación baja.</li>
+                        <li class="flex items-start"><span
+                                class="w-5 h-5 rounded-full bg-[#1e5b4f] text-white flex-shrink-0 flex items-center justify-center mr-2 mt-0.5 text-xs">3</span>Capacitación
+                            en documentación y análisis de indicadores clave.</li>
+                    </ul>
+                </div>
+                <div class="rec-card">
+                    <h4 class="font-semibold text-[#002f2a] mb-3"><i
+                            class="fas fa-calendar-alt mr-1 text-[#a57f2c]"></i> Mediano plazo</h4>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li class="flex items-start"><span
+                                class="w-5 h-5 rounded-full bg-[#1e5b4f] text-white flex-shrink-0 flex items-center justify-center mr-2 mt-0.5 text-xs">1</span>Desarrollar
+                            planes de mejora para áreas de bajo rendimiento consistente.</li>
+                        <li class="flex items-start"><span
+                                class="w-5 h-5 rounded-full bg-[#1e5b4f] text-white flex-shrink-0 flex items-center justify-center mr-2 mt-0.5 text-xs">2</span>Establecer
+                            sistemas de supervisión y seguimiento para protocolos.</li>
+                        <li class="flex items-start"><span
+                                class="w-5 h-5 rounded-full bg-[#1e5b4f] text-white flex-shrink-0 flex items-center justify-center mr-2 mt-0.5 text-xs">3</span>Implementar
+                            comités interinstitucionales para compartir mejores prácticas.</li>
+                    </ul>
+                </div>
+                <div class="rec-card">
+                    <h4 class="font-semibold text-[#002f2a] mb-3"><i class="fas fa-chess mr-1 text-[#1e5b4f]"></i>
+                        Estratégicas</h4>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li class="flex items-start"><span
+                                class="w-5 h-5 rounded-full bg-[#1e5b4f] text-white flex-shrink-0 flex items-center justify-center mr-2 mt-0.5 text-xs">1</span>Desarrollar
+                            sistema de evaluación continua con retroalimentación periódica.</li>
+                        <li class="flex items-start"><span
+                                class="w-5 h-5 rounded-full bg-[#1e5b4f] text-white flex-shrink-0 flex items-center justify-center mr-2 mt-0.5 text-xs">2</span>Programa
+                            de reconocimiento para hospitales con mejoras significativas.</li>
+                        <li class="flex items-start"><span
+                                class="w-5 h-5 rounded-full bg-[#1e5b4f] text-white flex-shrink-0 flex items-center justify-center mr-2 mt-0.5 text-xs">3</span>Crear
+                            grupos de trabajo especializados para problemas sistémicos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#161a1d] text-white py-6 text-center">
+        <p class="text-sm text-[#98989A]">Fuente: CEISS (Comando Estatal Interinstitucional del Sector Salud) —
+            Tamaulipas 2024</p>
+        <p class="text-xs text-gray-600 mt-1">Gobierno de México © 2026</p>
+    </footer>
+
+    <script>
+        // ========== DATA ==========
+        const HOSPITALES = [
+            { inst: "IMSS Bienestar", nombre: 'Hosp. Civil Madero "Dr. H. Espinoza"', puntuacion: 40, status: 'medio', datos: { "Salud Materna": 40, "Salud Perinatal": 30, "Farmacovigilancia": 0, "Licencias Sanitarias": 20, "Higiene de manos": 5, "PAP-ITSCC": 66, "PAP-NAVM": 29, "PAP-IVUCU": 33, "Limpieza y desinfección": 0, "Manejo de antisépticos": 0, "Salud mental": 30, "VIH": 16, "VHC": 0 } },
+            { inst: "IMSS Bienestar", nombre: 'Hosp. Gral. Mante "Dr. E. Martínez"', puntuacion: 60, status: 'alto', datos: { "Salud Materna": 60, "Salud Perinatal": 75, "Farmacovigilancia": 0, "Subcomité Antimicrobianos": 10, "CODECIAAS": 30, "Higiene de manos": 50, "Central esterilización": 10, "Salud mental": 10, "VIH": 72, "VHC": 85 } },
+            { inst: "IMSS Bienestar", nombre: "HRAE Cd. Victoria", puntuacion: 58, status: 'alto', datos: { "Salud Materna": 10, "Salud Perinatal": 10, "Subcomité Antimicrobianos": 5, "Higiene de manos": 50, "PAP-ITSCC": 60, "Precauciones transmisión": 20, "Limpieza y desinfección": 50, "Manejo de antisépticos": 50 } },
+            { inst: "IMSS Bienestar", nombre: 'Hosp. Civil Victoria "Dr. J. Macías"', puntuacion: 39, status: 'medio', datos: { "Salud Materna": 10, "Salud Perinatal": 10, "Farmacovigilancia": 0, "Capacidad laboratorio": 80, "CODECIAAS": 10, "Higiene de manos": 50, "PAP-IVUCU": 100, "PAP ISQX": 50 } },
+            { inst: "IMSS Bienestar", nombre: "Hospital Infantil de Tamaulipas", puntuacion: 73, status: 'alto', datos: { "Salud Perinatal": 60, "Subcomité Antimicrobianos": 55, "Capacidad laboratorio": 88, "CODECIAAS": 55, "Higiene de manos": 100, "PAP-ITSCC": 50, "PAP-NAVM": 50, "PAP-IVUCU": 55, "Central esterilización": 80, "Hemodiálisis": 100 } },
+            { inst: "IMSS Bienestar", nombre: 'Hosp. Gral. Victoria "Dr. N. Treviño"', puntuacion: 42, status: 'medio', datos: { "Salud Materna": 85, "Salud Perinatal": 45, "Subcomité Antimicrobianos": 40, "Capacidad laboratorio": 80, "Higiene de manos": 50, "PAP-NAVM": 5, "Limpieza y desinfección": 30, "Central esterilización": 42 } },
+            { inst: "IMSS Bienestar", nombre: "Hospital Integral Aldama", puntuacion: 29, status: 'bajo', datos: { "Salud Materna": 40, "Salud Perinatal": 45, "Farmacovigilancia": 0, "Subcomité Antimicrobianos": 25, "CODECIAAS": 5, "Higiene de manos": 75, "PAP-ITSCC": 5, "PAP-IVUCU": 50, "Central esterilización": 30, "Salud mental": 10, "VIH": 0 } },
+            { inst: "IMSS Bienestar", nombre: "Hospital General Altamira", puntuacion: 51, status: 'alto', datos: { "Salud Materna": 35, "Salud Perinatal": 25, "Licencias Sanitarias": 14, "Subcomité Antimicrobianos": 10, "Capacidad laboratorio": 40, "Higiene de manos": 95, "PAP-ITSCC": 66, "PAP-NAVM": 74, "PAP-IVUCU": 67, "Salud mental": 60, "VIH": 12 } },
+            { inst: "IMSS Bienestar", nombre: "Hospital Materno Reynosa", puntuacion: 76, status: 'alto', datos: { "Salud Materna": 77, "Salud Perinatal": 86, "Subcomité Antimicrobianos": 68, "Capacidad laboratorio": 63, "CODECIAAS": 70, "Higiene de manos": 38, "PAP-ITSCC": 50, "PAP-NAVM": 29, "Central esterilización": 70, "Nutrición": 69, "Salud mental": 30, "VIH": 21, "VHC": 30 } },
+            { inst: "IMSS Bienestar", nombre: "Hospital General Reynosa", puntuacion: 68, status: 'alto', datos: { "Salud Materna": 95, "Salud Perinatal": 78, "Farmacovigilancia": 52, "Subcomité Antimicrobianos": 60, "Capacidad laboratorio": 70, "CODECIAAS": 65, "Higiene de manos": 100, "PAP-ITSCC": 40, "PAP-NAVM": 71, "PAP-IVUCU": 50, "Limpieza y desinfección": 17, "Central esterilización": 70, "Hemodiálisis": 82, "Salud mental": 40, "VIH": 28, "VHC": 30 } },
+            { inst: "IMSS Bienestar", nombre: "Hospital General San Fernando", puntuacion: 22, status: 'bajo', datos: { "Farmacovigilancia": 0, "Subcomité Antimicrobianos": 40, "Higiene de manos": 53, "PAP-ITSCC": 15, "PAP-IVUCU": 15, "Precauciones transmisión": 11, "Limpieza y desinfección": 30, "Central esterilización": 10, "Salud mental": 10, "VIH": 8 } },
+            { inst: "ISSSTE", nombre: "Clínica Hospital ISSSTE Mante", puntuacion: 27, status: 'bajo', datos: { "Salud Materna": 10, "Salud Perinatal": 10, "Subcomité Antimicrobianos": 4, "Capacidad laboratorio": 5, "CODECIAAS": 10, "Higiene de manos": 70, "Precauciones transmisión": 35, "Central esterilización": 42, "Salud mental": 30, "VIH": 20, "VHC": 30 } },
+            { inst: "ISSSTE", nombre: "Clínica ISSSTE Cd. Victoria", puntuacion: 35, status: 'medio', datos: { "Salud Materna": 40, "Salud Perinatal": 30, "Subcomité Antimicrobianos": 10, "CODECIAAS": 4, "Higiene de manos": 20, "PAP-ITSCC": 50, "PAP-IVUCU": 67, "Precauciones transmisión": 30, "Limpieza y desinfección": 10, "Central esterilización": 10 } },
+            { inst: "ISSSTE", nombre: "ISSSTE Reynosa", puntuacion: 48, status: 'medio', datos: { "Salud Materna": 45, "Salud Perinatal": 58, "Subcomité Antimicrobianos": 40, "Capacidad laboratorio": 78, "Higiene de manos": 25, "PAP-ITSCC": 66, "PAP-IVUCU": 30, "Salud mental": 25, "VIH": 22, "VHC": 45 } },
+            { inst: "IMSS Ordinario", nombre: "HGZ No. 3 Cd. Mante", puntuacion: 54, status: 'alto', datos: { "Salud Materna": 80, "Salud Perinatal": 60, "CODECIAAS": 10, "Higiene de manos": 91, "PAP-ITSCC": 83, "PAP-NAVM": 57, "PAP-IVUCU": 61, "Precauciones transmisión": 40, "Salud mental": 30, "VIH": 16 } },
+            { inst: "IMSS Ordinario", nombre: 'HGZ No. 1 "Dr. H. Salinas" Victoria', puntuacion: 61, status: 'alto', datos: { "Salud Materna": 20, "Salud Perinatal": 20, "Higiene de manos": 80, "PAP-ITSCC": 15, "Limpieza y desinfección": 30, "Central esterilización": 25 } },
+            { inst: "IMSS Ordinario", nombre: "HGZ 15 UMMA Reynosa", puntuacion: 69, status: 'alto', datos: { "Salud Materna": 70, "Salud Perinatal": 81, "Farmacovigilancia": 33, "Subcomité Antimicrobianos": 40, "Capacidad laboratorio": 70, "Higiene de manos": 80, "PAP-ITSCC": 80, "PAP-NAVM": 15, "Limpieza y desinfección": 30, "Central esterilización": 25 } },
+            { inst: "IMSS Ordinario", nombre: "270 IMSS", puntuacion: 33, status: 'medio', datos: { "Subcomité Antimicrobianos": 80, "CODECIAAS": 77, "Higiene de manos": 82, "PAP-ITSCC": 61, "PAP-NAVM": 93, "PAP-IVUCU": 93, "PAP ISQX": 58, "Precauciones transmisión": 45, "Limpieza y desinfección": 85, "Central esterilización": 90, "Manejo de antisépticos": 75, "Hemodiálisis": 84, "Nutrición": 95, "Salud mental": 70, "VIH": 16, "VHC": 50 } }
+        ];
+
+        const HALLAZGOS = {
+            "Salud Materna": ["Plantilla de personal incompleta.", "Infraestructura no acorde a la normatividad.", "Sin análisis de indicadores de atención materna.", "Sin plan de mejora para APEO.", "Falta módulo mater y triage obstétrico."],
+            "Salud Perinatal": ["Insuficientes pediatras y neonatólogos por turno.", "Falta de insumos y equipo médico adecuado.", "Falta equipo de reanimación neonatal.", "Sin análisis de morbimortalidad neonatal.", "Falta plan de trabajo."],
+            "Farmacovigilancia": ["Falta instalar unidad de farmacovigilancia.", "Incumplimiento NOM 220-SSA1-2016.", "No hay farmacéutico de base.", "Sin análisis de prescripción de medicamentos.", "No hay sistema de farmacovigilancia."]
+        };
+
+        const STATUS_COLORS = { alto: '#1e5b4f', medio: '#a57f2c', bajo: '#9b2247' };
+        const STATUS_LABELS = { alto: 'Alto rendimiento', medio: 'Rendimiento medio', bajo: 'Bajo rendimiento' };
+
+        // ========== STATE ==========
+        let currentFilter = 'todas';
+        let selectedHospital = null;
+        let pieChart, categoryChart, comparisonChart;
+
+        function getFiltered() {
+            return currentFilter === 'todas' ? HOSPITALES : HOSPITALES.filter(h => h.inst === currentFilter);
+        }
+
+        // ========== RENDER ==========
+        function render() {
+            const data = getFiltered();
+            renderFilters();
+            renderStats(data);
+            renderRanking(data);
+            renderPie(data);
+            renderDetail();
+            renderCategoryChart(data);
+            renderCategorySelect();
+            renderComparisonChart(data);
+            renderHallazgos(data);
+        }
+
+        function renderFilters() {
+            const filters = [
+                { key: 'todas', label: 'Todas', cls: 'active-todas' },
+                { key: 'IMSS Bienestar', label: 'IMSS Bienestar', cls: 'active-imss' },
+                { key: 'ISSSTE', label: 'ISSSTE', cls: 'active-issste' },
+                { key: 'IMSS Ordinario', label: 'IMSS Ordinario', cls: 'active-ordinario' }
+            ];
+            document.getElementById('filterBar').innerHTML = filters.map(f =>
+                `<button class="filter-btn ${currentFilter === f.key ? f.cls : ''}" onclick="setFilter('${f.key}')">${f.label} (${f.key === 'todas' ? HOSPITALES.length : HOSPITALES.filter(h => h.inst === f.key).length})</button>`
+            ).join('');
+        }
+
+        function renderStats(data) {
+            const avg = data.length ? (data.reduce((s, h) => s + h.puntuacion, 0) / data.length).toFixed(1) : 0;
+            const alto = data.filter(h => h.status === 'alto').length;
+            const bajo = data.filter(h => h.status === 'bajo').length;
+            const best = data.length ? [...data].sort((a, b) => b.puntuacion - a.puntuacion)[0] : null;
+            document.getElementById('statsBar').innerHTML = `
+                <div class="card p-4 text-center border-t-4" style="border-color:#1e5b4f">
+                    <p class="text-2xl font-bold text-[#1e5b4f]">${data.length}</p><p class="text-xs text-gray-500">Hospitales evaluados</p>
+                </div>
+                <div class="card p-4 text-center border-t-4" style="border-color:#a57f2c">
+                    <p class="text-2xl font-bold text-[#a57f2c]">${avg}%</p><p class="text-xs text-gray-500">Puntuación promedio</p>
+                </div>
+                <div class="card p-4 text-center border-t-4" style="border-color:#1e5b4f">
+                    <p class="text-2xl font-bold text-[#1e5b4f]">${alto}</p><p class="text-xs text-gray-500">Alto rendimiento</p>
+                </div>
+                <div class="card p-4 text-center border-t-4" style="border-color:#9b2247">
+                    <p class="text-2xl font-bold text-[#9b2247]">${bajo}</p><p class="text-xs text-gray-500">Bajo rendimiento</p>
+                </div>`;
+        }
+
+        function renderRanking(data) {
+            const sorted = [...data].sort((a, b) => b.puntuacion - a.puntuacion);
+            document.getElementById('rankingList').innerHTML = sorted.map((h, i) => `
+                <div class="hospital-row mb-2 flex items-center ${selectedHospital === h.nombre ? 'selected' : ''}" style="border-color:${STATUS_COLORS[h.status]}" onclick="selectHospital('${h.nombre.replace(/'/g, "\\'")}')">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:${STATUS_COLORS[h.status]}">${i + 1}</div>
+                    <div class="ml-3 flex-grow min-w-0">
+                        <p class="font-semibold text-sm text-[#161a1d] truncate">${h.nombre}</p>
+                        <p class="text-xs text-[#98989A]">${h.inst}</p>
+                    </div>
+                    <div class="ml-2 text-right">
+                        <span class="text-lg font-bold" style="color:${STATUS_COLORS[h.status]}">${h.puntuacion}%</span>
+                        <span class="status-badge status-${h.status} block mt-1">${STATUS_LABELS[h.status].split(' ')[0]}</span>
+                    </div>
+                </div>`).join('');
+        }
+
+        function renderPie(data) {
+            const counts = [data.filter(h => h.status === 'alto').length, data.filter(h => h.status === 'medio').length, data.filter(h => h.status === 'bajo').length];
+            if (pieChart) pieChart.destroy();
+            pieChart = new Chart(document.getElementById('pieChart'), {
+                type: 'doughnut',
+                data: { labels: ['Alto', 'Medio', 'Bajo'], datasets: [{ data: counts, backgroundColor: ['#1e5b4f', '#a57f2c', '#9b2247'], borderWidth: 2, borderColor: '#fff' }] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+            });
+            document.getElementById('pieStats').innerHTML = [
+                { l: 'Alto', v: counts[0], c: '#1e5b4f' }, { l: 'Medio', v: counts[1], c: '#a57f2c' }, { l: 'Bajo', v: counts[2], c: '#9b2247' }
+            ].map(s => `<div class="text-center p-2 rounded" style="background:${s.c}15"><span class="font-bold text-lg" style="color:${s.c}">${s.v}</span><br><span class="text-[10px] text-gray-600">${s.l}</span></div>`).join('');
+        }
+
+        function renderDetail() {
+            const panel = document.getElementById('detailPanel');
+            if (!selectedHospital) { panel.classList.add('hidden'); return; }
+            const h = HOSPITALES.find(x => x.nombre === selectedHospital);
+            if (!h) { panel.classList.add('hidden'); return; }
+            panel.classList.remove('hidden');
+            const entries = Object.entries(h.datos).sort((a, b) => b[1] - a[1]);
+            const low = entries.filter(([_, v]) => v < 30).slice(0, 4);
+            const top5 = entries.slice(0, 5);
+            panel.innerHTML = `
+                <div class="card detail-panel">
+                    <div class="card-header flex justify-between items-center" style="background:linear-gradient(135deg,#1e5b4f,#002f2a)">
+                        <div><h3 class="text-xl font-semibold">${h.nombre}</h3><p class="text-[#e6d194] text-sm">${h.inst}</p></div>
+                        <button onclick="selectHospital(null)" class="px-3 py-1 bg-white/20 hover:bg-white/30 rounded text-white text-sm">✕ Cerrar</button>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="bg-gray-50 p-3 rounded-lg"><p class="text-xs text-gray-500">Evaluación</p><p class="text-2xl font-bold" style="color:${STATUS_COLORS[h.status]}">${h.puntuacion}%</p></div>
+                                <div class="bg-gray-50 p-3 rounded-lg"><p class="text-xs text-gray-500">Estado</p><p class="font-semibold" style="color:${STATUS_COLORS[h.status]}">${STATUS_LABELS[h.status]}</p></div>
+                            </div>
+                            <h4 class="font-medium text-[#161a1d] mb-2">Top puntuaciones</h4>
+                            ${top5.map(([cat, val]) => `<div class="flex items-center mb-2"><div class="w-14 h-6 rounded text-white text-xs font-bold flex items-center justify-center" style="background:${val > 50 ? '#1e5b4f' : val > 30 ? '#a57f2c' : '#9b2247'}">${val}%</div><span class="ml-2 text-sm">${cat}</span></div>`).join('')}
+                        </div>
+                        <div>
+                            ${low.length ? `<h4 class="font-medium text-[#611232] mb-2"><i class="fas fa-exclamation-circle mr-1"></i>Áreas críticas (&lt;30%)</h4>
+                            <ul class="space-y-1 mb-4">${low.map(([cat, val]) => `<li class="text-sm flex items-center"><span class="w-3 h-3 rounded-full bg-[#9b2247] mr-2"></span>${cat} (${val}%)</li>`).join('')}</ul>` : ''}
+                            <h4 class="font-medium text-[#161a1d] mb-2">Todas las categorías</h4>
+                            <div class="max-h-48 overflow-y-auto space-y-1">${entries.map(([cat, val]) => `<div class="flex items-center text-xs"><span class="w-20 font-medium text-right mr-2">${val}%</span><div class="flex-grow bg-gray-100 rounded-full h-3"><div class="h-3 rounded-full" style="width:${val}%;background:${val > 50 ? '#1e5b4f' : val > 30 ? '#a57f2c' : '#9b2247'}"></div></div><span class="ml-2 w-32 truncate">${cat}</span></div>`).join('')}</div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function renderCategoryChart(data) {
+            const allCats = [...new Set(data.flatMap(h => Object.keys(h.datos)))];
+            const catAvgs = allCats.map(cat => {
+                const vals = data.map(h => h.datos[cat]).filter(v => typeof v === 'number');
+                return { cat, avg: vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0 };
+            }).sort((a, b) => a.avg - b.avg);
+            if (categoryChart) categoryChart.destroy();
+            categoryChart = new Chart(document.getElementById('categoryChart'), {
+                type: 'bar',
+                data: {
+                    labels: catAvgs.map(c => c.cat),
+                    datasets: [{ label: 'Promedio %', data: catAvgs.map(c => Math.round(c.avg * 10) / 10), backgroundColor: catAvgs.map(c => c.avg > 50 ? '#1e5b4f' : c.avg > 30 ? '#a57f2c' : '#9b2247'), borderRadius: 4 }]
+                },
+                options: { indexAxis: 'y', responsive: true, scales: { x: { max: 100, ticks: { callback: v => v + '%' } }, y: { ticks: { font: { size: 10 } } } }, plugins: { legend: { display: false } } }
+            });
+        }
+
+        function renderCategorySelect() {
+            const allCats = [...new Set(HOSPITALES.flatMap(h => Object.keys(h.datos)))].sort();
+            const sel = document.getElementById('categorySelect');
+            if (!sel.options.length) {
+                sel.innerHTML = allCats.map(c => `<option value="${c}">${c}</option>`).join('');
+                sel.addEventListener('change', () => renderComparisonChart(getFiltered()));
+            }
+        }
+
+        function renderComparisonChart(data) {
+            const cat = document.getElementById('categorySelect').value;
+            const items = data.map(h => ({ nombre: h.nombre, valor: h.datos[cat] })).filter(i => typeof i.valor === 'number').sort((a, b) => b.valor - a.valor);
+            if (comparisonChart) comparisonChart.destroy();
+            comparisonChart = new Chart(document.getElementById('comparisonChart'), {
+                type: 'bar',
+                data: {
+                    labels: items.map(i => i.nombre.length > 30 ? i.nombre.substring(0, 30) + '...' : i.nombre),
+                    datasets: [{ label: cat, data: items.map(i => i.valor), backgroundColor: items.map(i => i.valor >= 50 ? '#1e5b4f' : i.valor >= 30 ? '#a57f2c' : '#9b2247'), borderRadius: 4 }]
+                },
+                options: { indexAxis: 'y', responsive: true, scales: { x: { max: 100, ticks: { callback: v => v + '%' } }, y: { ticks: { font: { size: 10 } } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + '%' } } } }
+            });
+        }
+
+        function renderHallazgos(data) {
+            document.getElementById('hallazgosList').innerHTML = Object.entries(HALLAZGOS).map(([cat, items]) => `
+                <div class="hallazgo-card">
+                    <h4 class="font-semibold text-[#611232] mb-3"><i class="fas fa-clipboard-list mr-1"></i>${cat}</h4>
+                    <ul class="space-y-2">${items.map(item => `<li class="flex items-start text-sm text-gray-700"><span class="w-2 h-2 rounded-full bg-[#a57f2c] mt-1.5 mr-2 flex-shrink-0"></span>${item}</li>`).join('')}</ul>
+                </div>`).join('');
+        }
+
+        // ========== ACTIONS ==========
+        function setFilter(f) { currentFilter = f; selectedHospital = null; render(); }
+        function selectHospital(name) { selectedHospital = selectedHospital === name ? null : name; render(); }
+
+        // ========== INIT ==========
+        render();
+    </script>
+</body>
+
+</html>

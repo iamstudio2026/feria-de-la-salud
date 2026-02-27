@@ -169,14 +169,14 @@
             </div>
             <h1 class="text-2xl md:text-4xl font-patria font-bold mb-3">Corredor de Salud DIF</h1>
             <p class="text-gray-200 text-sm md:text-base max-w-2xl mx-auto mb-4">
-                Resultados consolidados de la segunda feria — <strong>Col. Pajaritos, Victoria, Tamaulipas</strong>
+                Resultados consolidados de la primera feria — <strong>Col. Echeverría, Victoria, Tamaulipas</strong>
             </p>
             <div class="flex flex-wrap justify-center gap-3 text-xs">
                 <span class="bg-white/10 px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
                     <i class="fa-solid fa-calendar-day text-[#e6d194]"></i> 26 de Febrero 2026
                 </span>
                 <span class="bg-white/10 px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
-                    <i class="fa-solid fa-location-dot text-[#e6d194]"></i> Victoria — Pajaritos
+                    <i class="fa-solid fa-location-dot text-[#e6d194]"></i> Victoria 1 — Echeverría
                 </span>
                 <span class="bg-[#9b2247]/40 px-3 py-1.5 rounded-lg border border-[#9b2247]/60 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-green-400 pulse-dot inline-block"></span> Realizado
@@ -532,56 +532,51 @@
         });
 
         // ============ CHART 3: iBreast / Cáncer ============
-        const cancerData = programas.find(p => p.categoria === 'Detección Cáncer')?.servicios || [];
         new Chart(document.getElementById('chartCancer'), {
             type: 'bar',
             data: {
-                labels: cancerData.map(s => s.nombre.length > 15 ? s.nombre.substring(0, 15) + '…' : s.nombre),
-                datasets: [{ data: cancerData.map(s => s.cantidad), backgroundColor: ['#db277790', '#f472b690', '#ec489990', '#f9a8d490', '#be185d90', '#e11d4890'], borderColor: ['#db2777', '#f472b6', '#ec4899', '#f9a8d4', '#be185d', '#e11d48'], borderWidth: 1, borderRadius: 4 }]
+                labels: ['Exploración', 'iBreast Exam', 'Signos CaMa', 'Autoexploración', 'Mastografía', 'Salud mental'],
+                datasets: [{ data: [43, 43, 43, 43, 22, 2], backgroundColor: ['#db277790', '#f472b690', '#ec489990', '#f9a8d490', '#be185d90', '#e11d4890'], borderColor: ['#db2777', '#f472b6', '#ec4899', '#f9a8d4', '#be185d', '#e11d48'], borderWidth: 1, borderRadius: 4 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { ticks: { font: { size: 9 } }, grid: { display: false } } } }
         });
 
         // ============ CHART 4: Vacunas ============
-        const vacunasData = programas.find(p => p.categoria === 'Vacunación')?.servicios || [];
         new Chart(document.getElementById('chartVacunas'), {
             type: 'polarArea',
             data: {
-                labels: vacunasData.map(s => s.nombre.replace('Vacunación ', '').replace('Vacuna ', '')),
-                datasets: [{ data: vacunasData.map(s => s.cantidad), backgroundColor: ['#2563eb88', '#3b82f688', '#60a5fa88', '#93c5fd88', '#ea580c88'], borderColor: ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#ea580c'], borderWidth: 2 }]
+                labels: ['Influenza', 'SR', 'Neumococo', 'Antitetánica', 'Zoonosis'],
+                datasets: [{ data: [33, 32, 5, 2, 25], backgroundColor: ['#2563eb88', '#3b82f688', '#60a5fa88', '#93c5fd88', '#ea580c88'], borderColor: ['#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#ea580c'], borderWidth: 2 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
         });
 
         // ============ CHART 5: Estilo de Vida Saludable ============
-        const estiloData = programas.find(p => p.categoria === 'Estilo de Vida')?.servicios || [];
         new Chart(document.getElementById('chartBucal'), {
             type: 'radar',
             data: {
-                labels: estiloData.map(s => s.nombre.length > 15 ? s.nombre.substring(0, 15) + '…' : s.nombre),
-                datasets: [{ data: estiloData.map(s => s.cantidad), backgroundColor: '#16a34a33', borderColor: '#16a34a', pointBackgroundColor: '#16a34a', borderWidth: 2 }]
+                labels: ['Tamizaje', 'Trípticos', 'Hábitos', 'IMC'],
+                datasets: [{ data: [117, 117, 117, 117], backgroundColor: '#16a34a33', borderColor: '#16a34a', pointBackgroundColor: '#16a34a', borderWidth: 2 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { r: { beginAtZero: true } } }
         });
 
         // ============ CHART 6: Detecciones Médicas ============
-        const detData = programas.find(p => p.categoria === 'Detección')?.servicios || [];
         new Chart(document.getElementById('chartDetecciones'), {
             type: 'bar',
             data: {
-                labels: detData.map(s => s.nombre.replace('Detección ', '')),
-                datasets: [{ data: detData.map(s => s.cantidad), backgroundColor: '#6b21a8aa', borderColor: '#6b21a8', borderWidth: 1, borderRadius: 4 }]
+                labels: ['HTA', 'Diabetes', 'Papanicolaou', 'VPH'],
+                datasets: [{ data: [100, 100, 3, 2], backgroundColor: '#6b21a8aa', borderColor: '#6b21a8', borderWidth: 1, borderRadius: 4 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { ticks: { font: { size: 9 } }, grid: { display: false } } } }
         });
 
-        // ============ CHART 7: Asesoría ============
-        const asesoriaData = programas.find(p => p.categoria === 'Asesoría')?.servicios || [];
+        // ============ CHART 7: Nutrición ============
         new Chart(document.getElementById('chartNutricion'), {
             type: 'bar',
             data: {
-                labels: asesoriaData.map(s => s.nombre.length > 15 ? s.nombre.substring(0, 15) + '…' : s.nombre),
-                datasets: [{ data: asesoriaData.map(s => s.cantidad), backgroundColor: ['#ea580caa', '#f97316aa', '#fb923caa', '#fdba74aa', '#ffedd5aa'], borderColor: ['#ea580c', '#f97316', '#fb923c', '#fdba74', '#ffedd5'], borderWidth: 1, borderRadius: 4 }]
+                labels: ['Consulta Mental', 'Info Mental', 'Prev. Violencia', 'Consejería PF', 'CaMa Mujer'],
+                datasets: [{ data: [9, 20, 12, 12, 12], backgroundColor: ['#ea580caa', '#f97316aa', '#fb923caa', '#fdba74aa', '#ffedd5aa'], borderColor: ['#ea580c', '#f97316', '#fb923c', '#fdba74', '#ffedd5'], borderWidth: 1, borderRadius: 4 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { ticks: { font: { size: 9 } }, grid: { display: false } } } }
         });

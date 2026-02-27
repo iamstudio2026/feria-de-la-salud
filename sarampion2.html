@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Comando Sarampión - Tamaulipas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="[enlace sospechoso eliminado]" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        /* Navegación y Transiciones */
+        .tab-active {
+            border-bottom: 2px solid #be1e2d;
+            color: #be1e2d;
+            font-weight: 700;
+            background-color: #fef2f2;
+        }
+
+        .tab-inactive {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .tab-inactive:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Checkbox personalizado */
+        .checkbox-wrapper input:checked+div {
+            background-color: #ecfdf5;
+            border-color: #10b981;
+        }
+
+        .checkbox-wrapper input:checked+div i {
+            color: #10b981;
+            opacity: 1;
+        }
+
+        /* Estilos específicos GOLI */
+        .goli-card {
+            transition: all 0.3s ease;
+        }
+
+        .goli-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <header class="bg-white border-b border-gray-200 shadow-sm z-20 flex-shrink-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-red-800 text-white p-2 rounded-lg font-bold text-xl shadow-md">
+                    <i class="fa-solid fa-shield-virus"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold text-gray-900 leading-tight">Sarampión Tamaulipas</h1>
+                    <p class="text-xs text-gray-500 font-medium">Sistema Integral de Respuesta (GOLI + CCSB)</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-4">
+                <span
+                    class="px-3 py-1 rounded-full bg-red-100 text-red-800 text-xs font-bold animate-pulse border border-red-200">
+                    <i class="fa-solid fa-circle text-[8px] mr-1"></i> ALERTA EPIDEMIOLÓGICA
+                </span>
+                <button onclick="window.print()" class="text-gray-400 hover:text-gray-700 transition-colors"
+                    title="Imprimir Reporte">
+                    <i class="fa-solid fa-print text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+
+        <nav class="hidden md:block w-72 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto z-10">
+            <div class="p-4 space-y-1">
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-2 mt-2">Clínica</div>
+                <button onclick="switchTab('flowchart')" id="nav-flowchart"
+                    class="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors tab-active">
+                    <i class="fa-solid fa-user-doctor w-5 text-center"></i> Vía Clínica (Triage)
+                </button>
+                <button onclick="switchTab('checklists')" id="nav-checklists"
+                    class="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors tab-inactive">
+                    <i class="fa-solid fa-list-check w-5 text-center"></i> Listas de Verificación
+                </button>
+
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-2 mt-4">Operación</div>
+                <button onclick="switchTab('regions')" id="nav-regions"
+                    class="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors tab-inactive">
+                    <i class="fa-solid fa-map-location-dot w-5 text-center"></i> Regionalización
+                </button>
+                <button onclick="switchTab('shelters')" id="nav-shelters"
+                    class="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors tab-inactive">
+                    <i class="fa-solid fa-person-shelter w-5 text-center"></i> Albergues / Migrantes
+                </button>
+
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-2 mt-4">Gerencia</div>
+                <button onclick="switchTab('goli')" id="nav-goli"
+                    class="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors tab-inactive">
+                    <i class="fa-solid fa-network-wired w-5 text-center"></i> Comando GOLI + CCSB
+                </button>
+                <button onclick="switchTab('kpi')" id="nav-kpi"
+                    class="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors tab-inactive">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i> Indicadores (KPI)
+                </button>
+            </div>
+        </nav>
+
+        <main class="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-8 relative scroll-smooth" id="main-content">
+
+            <div id="view-flowchart" class="fade-in max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">1) Vía Clínica Sarampión</h2>
+
+                <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                    <div class="p-8 border-b border-gray-100 bg-blue-50">
+                        <h3 class="font-bold text-xl text-blue-900 mb-2"><i
+                                class="fa-solid fa-stethoscope mr-2"></i>TRIAGE DE ENTRADA</h3>
+                        <p class="text-gray-700 mb-6 text-lg">¿Presenta el paciente <strong>Fiebre + Exantema
+                                maculopapular</strong> Y uno de los siguientes: <br><span
+                                class="text-sm bg-blue-100 px-2 py-1 rounded mt-1 inline-block">Tos</span> <span
+                                class="text-sm bg-blue-100 px-2 py-1 rounded mt-1 inline-block">Coriza</span> <span
+                                class="text-sm bg-blue-100 px-2 py-1 rounded mt-1 inline-block">Conjuntivitis</span>
+                            <span class="text-sm bg-blue-100 px-2 py-1 rounded mt-1 inline-block">Manchas de
+                                Koplik</span>?</p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="toggleFlow('suspected')"
+                                class="flex-1 bg-red-600 hover:bg-red-700 text-white py-4 rounded-lg font-bold shadow-lg transition-transform active:scale-95 text-lg flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-triangle-exclamation"></i> SÍ - CASO SOSPECHOSO
+                            </button>
+                            <button onclick="toggleFlow('standard')"
+                                class="flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 py-4 rounded-lg font-bold transition-transform active:scale-95 text-lg">
+                                NO - Manejo Habitual
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="flow-suspected" class="hidden animate-fade-in">
+                        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-red-50/30">
+
+                            <div class="bg-white border-l-4 border-red-500 p-5 rounded shadow-sm">
+                                <h4 class="font-bold text-red-700 mb-2 flex items-center"><span
+                                        class="bg-red-100 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">1</span>
+                                    AISLAMIENTO INMEDIATO</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 ml-1">
+                                    <li>Cubrebocas al paciente (si tolera).</li>
+                                    <li><strong>Aislamiento aéreo</strong> (cuarto cerrado/ventilado).</li>
+                                    <li>Restringir visitas al mínimo.</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white border-l-4 border-yellow-500 p-5 rounded shadow-sm">
+                                <h4 class="font-bold text-yellow-700 mb-2 flex items-center"><span
+                                        class="bg-yellow-100 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">2</span>
+                                    NOTIFICACIÓN</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 ml-1">
+                                    <li>Llamada inmediata a Epidemiología.</li>
+                                    <li>Activar Equipo de Respuesta Rápida (ERR).</li>
+                                    <li>Llenar estudio epidemiológico de caso.</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white border-l-4 border-indigo-500 p-5 rounded shadow-sm">
+                                <h4 class="font-bold text-indigo-700 mb-2 flex items-center"><span
+                                        class="bg-indigo-100 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">3</span>
+                                    TOMA DE MUESTRA</h4>
+                                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 ml-1">
+                                    <li><strong>Suero:</strong> IgM Sarampión/Rubéola (Tubo rojo).</li>
+                                    <li><strong>Exudado faríngeo:</strong> PCR (Medio de transporte viral) si está
+                                        disponible.</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white border-l-4 border-green-500 p-5 rounded shadow-sm">
+                                <h4 class="font-bold text-green-700 mb-2 flex items-center"><span
+                                        class="bg-green-100 w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2">4</span>
+                                    CLASIFICACIÓN</h4>
+                                <div class="text-sm space-y-2">
+                                    <div class="p-2 rounded bg-green-50 text-green-800 border border-green-100">
+                                        <strong>Ambulatorio:</strong> Sin complicaciones. Vitamina A. Aislamiento
+                                        domiciliario.
+                                    </div>
+                                    <div class="p-2 rounded bg-red-50 text-red-800 border border-red-100">
+                                        <strong>Hospitalizar:</strong> Neumonía, deshidratación, < 1 año, embarazo,
+                                            inmunocompromiso. </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-800 text-white p-6">
+                                <h4 class="font-bold text-lg mb-4 flex items-center"><i
+                                        class="fa-solid fa-users-rays mr-2"></i>MÓDULO EPIDEMIOLÓGICO (Paralelo)</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                                    <div class="bg-gray-700 p-4 rounded-lg">
+                                        <strong class="block text-blue-300 mb-1 text-base">Investigación</strong>
+                                        Viajes últimos 7-21 días, escuela, sala de espera.
+                                    </div>
+                                    <div class="bg-gray-700 p-4 rounded-lg">
+                                        <strong class="block text-blue-300 mb-1 text-base">Cerco Sanitario</strong>
+                                        Búsqueda activa (manzana/colonia) + Vacunación Bloqueo.
+                                    </div>
+                                    <div class="bg-gray-700 p-4 rounded-lg">
+                                        <strong class="block text-blue-300 mb-1 text-base">Profilaxis</strong>
+                                        SRP ≤72h a contactos. Inmunoglobulina ≤6 días a vulnerables.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="flow-standard" class="hidden p-12 text-center text-gray-500 bg-gray-50">
+                            <i class="fa-regular fa-circle-check text-5xl mb-4 text-green-500"></i>
+                            <h4 class="text-xl font-bold text-gray-700">Manejo Habitual</h4>
+                            <p class="mt-2">Continúe con el manejo médico según diagnóstico diferencial.</p>
+                            <div class="mt-4 inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded text-sm">
+                                <strong>Nota:</strong> Instruir a padres regresar inmediatamente si aparece exantema o
+                                la fiebre persiste > 3 días.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-checklists" class="hidden fade-in max-w-4xl mx-auto">
+                    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 border-b pb-4 gap-4">
+                        <h2 class="text-2xl font-bold text-gray-800">2) Listas de Verificación</h2>
+                        <select id="checklist-selector" onchange="renderChecklist()"
+                            class="bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm w-full sm:w-auto">
+                            <option value="primer">A) Primer Contacto (< 2hrs)</option>
+                            <option value="hospital">B) Hospital (< 6hrs)</option>
+                            <option value="epi">C) Epidemiología (< 48hrs)</option>
+                        </select>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+                        <div class="mb-8">
+                            <div class="flex justify-between text-sm text-gray-600 mb-2 font-medium">
+                                <span>Progreso del protocolo</span>
+                                <span id="progress-text" class="text-blue-600 font-bold">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                <div id="progress-bar"
+                                    class="bg-blue-600 h-3 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(37,99,235,0.5)]"
+                                    style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div id="checklist-container" class="space-y-3">
+                        </div>
+
+                        <div id="vitals-section" class="mt-8 pt-6 border-t border-gray-100 bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-bold text-gray-700 mb-4 flex items-center"><i
+                                    class="fa-solid fa-heart-pulse mr-2 text-red-500"></i>Registro Rápido de Signos</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div>
+                                    <label class="text-xs text-gray-500 font-bold uppercase">SpO2 (%)</label>
+                                    <input type="number"
+                                        class="w-full border border-gray-300 rounded p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        placeholder="Ej. 98">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-gray-500 font-bold uppercase">Temp (°C)</label>
+                                    <input type="number"
+                                        class="w-full border border-gray-300 rounded p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        placeholder="Ej. 38.5">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-gray-500 font-bold uppercase">FR (rpm)</label>
+                                    <input type="number"
+                                        class="w-full border border-gray-300 rounded p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        placeholder="Ej. 24">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-gray-500 font-bold uppercase">TA (mmHg)</label>
+                                    <input type="text"
+                                        class="w-full border border-gray-300 rounded p-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        placeholder="Ej. 110/70">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-regions" class="hidden fade-in max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">3) Estrategia Regionalizada</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-red-600 goli-card">
+                            <div class="p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="font-bold text-xl text-gray-900">Zona 1: Frontera</h3>
+                                    <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded font-bold">Alta
+                                        Movilidad</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-4">Matamoros, Reynosa, Nuevo Laredo.</p>
+                                <div class="space-y-3">
+                                    <div class="bg-red-50 p-3 rounded-lg border border-red-100">
+                                        <strong class="text-red-900 text-sm block">PRIORIDAD TÁCTICA</strong>
+                                        <span class="text-red-700 text-sm">Detección temprana + Cerco
+                                            ultra-rápido.</span>
+                                    </div>
+                                    <ul class="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                                        <li>Brigada ERR "24/7" de guardia.</li>
+                                        <li>Enlace directo con módulos migrantes.</li>
+                                        <li>Vacunación agresiva en puentes/cruces.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-orange-500 goli-card">
+                            <div class="p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="font-bold text-xl text-gray-900">Zona 2: Centro</h3>
+                                    <span
+                                        class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded font-bold">Administrativa</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-4">Ciudad Victoria y alrededores.</p>
+                                <div class="space-y-3">
+                                    <div class="bg-orange-50 p-3 rounded-lg border border-orange-100">
+                                        <strong class="text-orange-900 text-sm block">PRIORIDAD TÁCTICA</strong>
+                                        <span class="text-orange-700 text-sm">Escuelas y Salas de Espera.</span>
+                                    </div>
+                                    <ul class="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                                        <li>Vigilancia activa en guarderías.</li>
+                                        <li>Filtros estrictos en hospitales de referencia.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-blue-500 goli-card">
+                            <div class="p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="font-bold text-xl text-gray-900">Zona 3: Sur</h3>
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded font-bold">Turismo/Puerto</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-4">Tampico, Madero, Altamira.</p>
+                                <div class="space-y-3">
+                                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                        <strong class="text-blue-900 text-sm block">PRIORIDAD TÁCTICA</strong>
+                                        <span class="text-blue-700 text-sm">Eventos masivos y Turismo.</span>
+                                    </div>
+                                    <ul class="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                                        <li>Alertas a unidades privadas/hoteleras.</li>
+                                        <li>Coordinación municipal en eventos masivos.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-shelters" class="hidden fade-in max-w-4xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">4) Protocolo: Albergues y Migrantes
+                    </h2>
+
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden mb-6">
+                        <div class="bg-teal-700 text-white p-4">
+                            <h3 class="font-bold flex items-center gap-2 text-lg"><i
+                                    class="fa-solid fa-people-roof"></i> Puntos de Control Crítico</h3>
+                        </div>
+                        <div class="p-0">
+                            <div
+                                class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                                <div class="p-6">
+                                    <h4 class="font-bold text-teal-800 mb-3 uppercase text-sm tracking-wide">Detección y
+                                        Aislamiento</h4>
+                                    <ul class="space-y-4">
+                                        <li class="flex items-start gap-3">
+                                            <div class="bg-teal-100 text-teal-600 rounded-full p-1"><i
+                                                    class="fa-solid fa-check text-xs"></i></div>
+                                            <span class="text-gray-700 text-sm"><strong>Filtro diario:</strong> Búsqueda
+                                                activa de fiebre + rash en entrada y dormitorios.</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <div class="bg-teal-100 text-teal-600 rounded-full p-1"><i
+                                                    class="fa-solid fa-check text-xs"></i></div>
+                                            <span class="text-gray-700 text-sm"><strong>Zona Cero:</strong> Área de
+                                                aislamiento temporal designada (debe estar ventilada).</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <div class="bg-teal-100 text-teal-600 rounded-full p-1"><i
+                                                    class="fa-solid fa-check text-xs"></i></div>
+                                            <span class="text-gray-700 text-sm"><strong>Barrera física:</strong> Uso
+                                                obligatorio de cubrebocas quirúrgico en todo sintomático.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="p-6">
+                                    <h4 class="font-bold text-teal-800 mb-3 uppercase text-sm tracking-wide">Respuesta
+                                        Inmediata</h4>
+                                    <ul class="space-y-4">
+                                        <li class="flex items-start gap-3">
+                                            <div class="bg-teal-100 text-teal-600 rounded-full p-1"><i
+                                                    class="fa-solid fa-phone text-xs"></i></div>
+                                            <span class="text-gray-700 text-sm"><strong>Canal Rojo:</strong> Llamada
+                                                directa al enlace Jurisdiccional (Evitar burocracia).</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <div class="bg-teal-100 text-teal-600 rounded-full p-1"><i
+                                                    class="fa-solid fa-list-ol text-xs"></i></div>
+                                            <span class="text-gray-700 text-sm"><strong>Censo Nominal:</strong> Listado
+                                                de convivientes (habitación/cama/familia).</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <div class="bg-teal-100 text-teal-600 rounded-full p-1"><i
+                                                    class="fa-solid fa-baby text-xs"></i></div>
+                                            <span class="text-gray-700 text-sm"><strong>Blindaje:</strong> Identificar
+                                                vulnerables para Inmunoglobulina (embarazo, lactantes).</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-kpi" class="hidden fade-in max-w-5xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">5) Tablero de Indicadores
+                        (Jurisdicción)</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow border-l-4 border-green-500">
+                            <h4 class="text-gray-500 text-xs font-bold uppercase tracking-wider">Oportunidad
+                                Notificación</h4>
+                            <div class="flex items-end gap-2 mt-2">
+                                <span class="text-3xl font-bold text-gray-900">92%</span>
+                                <span class="text-sm text-green-600 mb-1 font-semibold">Mismo día</span>
+                            </div>
+                            <div class="w-full bg-gray-200 h-2 rounded-full mt-3">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow border-l-4 border-blue-500">
+                            <h4 class="text-gray-500 text-xs font-bold uppercase tracking-wider">Muestreo < 24h</h4>
+                                    <div class="flex items-end gap-2 mt-2">
+                                        <span class="text-3xl font-bold text-gray-900">85%</span>
+                                        <span class="text-sm text-blue-600 mb-1 font-semibold">Meta: >90%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 h-2 rounded-full mt-3">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 85%"></div>
+                                    </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow border-l-4 border-purple-500">
+                            <h4 class="text-gray-500 text-xs font-bold uppercase tracking-wider">Cobertura SRP
+                                Micro-área</h4>
+                            <div class="flex items-end gap-2 mt-2">
+                                <span class="text-3xl font-bold text-gray-900">98%</span>
+                                <span class="text-sm text-purple-600 mb-1 font-semibold">Óptimo</span>
+                            </div>
+                            <div class="w-full bg-gray-200 h-2 rounded-full mt-3">
+                                <div class="bg-purple-500 h-2 rounded-full" style="width: 98%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow p-6">
+                        <h3 class="font-bold text-gray-800 mb-4">Métricas de Calidad de la Respuesta</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-600">% Sospechosos aislados < 1 hora</span>
+                                            <span class="font-bold text-gray-800">100%</span>
+                                </div>
+                                <div class="w-full bg-gray-100 rounded-full h-3">
+                                    <div class="bg-green-500 h-3 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.4)]"
+                                        style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-600">% Contactos localizados < 48h</span>
+                                            <span class="font-bold text-gray-800">78%</span>
+                                </div>
+                                <div class="w-full bg-gray-100 rounded-full h-3">
+                                    <div class="bg-yellow-500 h-3 rounded-full" style="width: 78%"></div>
+                                </div>
+                                <p class="text-xs text-yellow-600 mt-1"><i class="fa-solid fa-triangle-exclamation"></i>
+                                    Requiere refuerzo en brigadas vespertinas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-goli" class="hidden fade-in max-w-6xl mx-auto">
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-6 border-b pb-4 gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">6) Comando GOLI + CCSB</h2>
+                            <p class="text-sm text-gray-500">Gestión Integral de Brotes y Prescripción Social</p>
+                        </div>
+                        <div
+                            class="bg-indigo-900 text-white px-4 py-2 rounded-lg shadow-sm text-sm font-mono flex items-center">
+                            <i class="fa-solid fa-tower-broadcast mr-2 animate-pulse"></i>ESTADO: ACTIVO NIVEL 2
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+                        <div class="bg-white rounded-xl shadow border-t-4 border-indigo-600 p-5 goli-card">
+                            <h3 class="font-bold text-gray-800 flex items-center mb-4 text-lg">
+                                <div
+                                    class="bg-indigo-100 w-8 h-8 flex items-center justify-center rounded mr-3 text-indigo-700">
+                                    <i class="fa-solid fa-chess"></i></div>
+                                GERENCIA (Mando Unificado)
+                            </h3>
+                            <div class="space-y-3">
+                                <div
+                                    class="flex justify-between items-center p-3 bg-gray-50 rounded border border-gray-200">
+                                    <span class="text-sm font-medium">Activación de Protocolo</span>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer" checked>
+                                        <div
+                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600">
+                                        </div>
+                                    </label>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center p-3 bg-gray-50 rounded border border-gray-200">
+                                    <span class="text-sm font-medium">Enlace Interinstitucional (IMSS/ISSSTE)</span>
+                                    <span
+                                        class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded font-bold border border-green-200">Conectado</span>
+                                </div>
+                                <button
+                                    class="w-full mt-2 bg-indigo-50 text-indigo-700 py-2 rounded text-sm hover:bg-indigo-100 font-semibold border border-indigo-200 transition-colors">
+                                    <i class="fa-solid fa-file-signature mr-2"></i>Emitir Boletín Epidemiológico
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow border-t-4 border-emerald-500 p-5 goli-card">
+                            <h3 class="font-bold text-gray-800 flex items-center mb-4 text-lg">
+                                <div
+                                    class="bg-emerald-100 w-8 h-8 flex items-center justify-center rounded mr-3 text-emerald-700">
+                                    <i class="fa-solid fa-user-nurse"></i></div>
+                                OPERACIÓN (Brigadas CCSB)
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between text-sm border-b pb-2">
+                                    <span class="text-gray-600">Brigada "Alfa" (Zona Centro)</span>
+                                    <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded"><i
+                                            class="fa-solid fa-walkie-talkie mr-1"></i>En Sitio</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm border-b pb-2">
+                                    <span class="text-gray-600">Brigada "Beta" (Albergue Migrantes)</span>
+                                    <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded"><i
+                                            class="fa-solid fa-syringe mr-1"></i>Vacunando</span>
+                                </div>
+                                <div class="mt-2">
+                                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                        <span>Meta diaria barrido</span>
+                                        <span>65%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-emerald-500 h-2 rounded-full" style="width: 65%"></div>
+                                    </div>
+                                    <div class="text-right text-xs text-emerald-700 mt-1">130/200 casas visitadas</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow border-t-4 border-amber-500 p-5 goli-card">
+                            <h3 class="font-bold text-gray-800 flex items-center mb-4 text-lg">
+                                <div
+                                    class="bg-amber-100 w-8 h-8 flex items-center justify-center rounded mr-3 text-amber-700">
+                                    <i class="fa-solid fa-box-open"></i></div>
+                                LOGÍSTICA (Insumos Críticos)
+                            </h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-gray-50 p-3 rounded text-center border border-gray-200">
+                                    <span class="block text-xs text-gray-500 uppercase font-bold">Vacuna SRP</span>
+                                    <span class="block text-xl font-bold text-gray-800">450</span>
+                                    <span class="text-xs text-green-600 font-bold">Disponible</span>
+                                </div>
+                                <div class="bg-red-50 p-3 rounded text-center border border-red-200 animate-pulse">
+                                    <span class="block text-xs text-red-500 uppercase font-bold">Kits Virales</span>
+                                    <span class="block text-xl font-bold text-red-700">12</span>
+                                    <span class="text-xs text-red-700 font-bold">STOCK CRÍTICO</span>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded text-center border border-gray-200">
+                                    <span class="block text-xs text-gray-500 uppercase font-bold">Vehículos</span>
+                                    <span class="block text-xl font-bold text-gray-800">3/4</span>
+                                    <span class="text-xs text-gray-500">Operativos</span>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded text-center border border-gray-200">
+                                    <span class="block text-xs text-gray-500 uppercase font-bold">Vitamina A</span>
+                                    <span class="block text-xl font-bold text-gray-800">200</span>
+                                    <span class="text-xs text-green-600 font-bold">Suficiente</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow border-t-4 border-blue-500 p-5 goli-card">
+                            <h3 class="font-bold text-gray-800 flex items-center mb-4 text-lg">
+                                <div
+                                    class="bg-blue-100 w-8 h-8 flex items-center justify-center rounded mr-3 text-blue-700">
+                                    <i class="fa-solid fa-map-location"></i></div>
+                                INTELIGENCIA (Mapa de Calor)
+                            </h3>
+                            <div
+                                class="bg-slate-100 h-32 rounded flex items-center justify-center mb-3 border border-slate-200 relative overflow-hidden group">
+                                <div
+                                    class="absolute inset-0 opacity-30 bg-[url('[https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Tamaulipas_in_Mexico.svg/1200px-Tamaulipas_in_Mexico.svg.png](https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Tamaulipas_in_Mexico.svg/1200px-Tamaulipas_in_Mexico.svg.png)')] bg-cover bg-center transition-opacity group-hover:opacity-40">
+                                </div>
+
+                                <span class="relative flex h-6 w-6">
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span
+                                        class="relative inline-flex rounded-full h-6 w-6 bg-red-500 border-2 border-white"></span>
+                                </span>
+
+                                <span
+                                    class="absolute bottom-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-bold shadow text-gray-800 backdrop-blur-sm">Foco
+                                    Activo: Col. Solidaridad</span>
+                            </div>
+                            <div class="text-xs text-gray-600 space-y-1 bg-blue-50 p-2 rounded">
+                                <p><strong>Tasa de Ataque:</strong> 2.5 x 100,000 habs.</p>
+                                <p><strong>R0 Estimado (Local):</strong> 12 (Alto Riesgo)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-gradient-to-br from-teal-50 to-white rounded-xl shadow-lg border border-teal-200 p-6 md:p-8">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-xl font-bold text-teal-900 flex items-center"><i
+                                        class="fa-solid fa-hand-holding-heart mr-3 text-2xl"></i>Prescripción Social
+                                    (CCSB)</h3>
+                                <p class="text-teal-700 text-sm mt-1">Gestión de determinantes sociales para garantizar
+                                    el aislamiento efectivo.</p>
+                            </div>
+                            <button onclick="generarRecetaSocial()"
+                                class="mt-4 md:mt-0 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg font-bold shadow-md transition-all active:scale-95 flex items-center">
+                                <i class="fa-solid fa-file-circle-plus mr-2"></i>Generar Referencia CCSB
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div
+                                class="bg-white p-5 rounded-lg shadow-sm border border-teal-100 hover:border-teal-300 transition-colors">
+                                <h4 class="font-bold text-gray-800 mb-4 border-b pb-2 flex items-center gap-2"><i
+                                        class="fa-solid fa-utensils text-teal-500"></i> Seguridad Alimentaria</h4>
+                                <label class="flex items-start gap-3 mb-3 cursor-pointer group">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 accent-teal-600 social-check"
+                                        value="Despensa Básica">
+                                    <span
+                                        class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Apoyo
+                                        alimentario (Despensa)</span>
+                                </label>
+                                <label class="flex items-start gap-3 cursor-pointer group">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 accent-teal-600 social-check"
+                                        value="Formula Láctea">
+                                    <span
+                                        class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Fórmula
+                                        láctea / Suplementos</span>
+                                </label>
+                            </div>
+
+                            <div
+                                class="bg-white p-5 rounded-lg shadow-sm border border-teal-100 hover:border-teal-300 transition-colors">
+                                <h4 class="font-bold text-gray-800 mb-4 border-b pb-2 flex items-center gap-2"><i
+                                        class="fa-solid fa-house-chimney text-teal-500"></i> Vivienda y Servicios</h4>
+                                <label class="flex items-start gap-3 mb-3 cursor-pointer group">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 accent-teal-600 social-check"
+                                        value="Kit Higiene">
+                                    <span class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Kit
+                                        de higiene (Jabón/Cloro)</span>
+                                </label>
+                                <label class="flex items-start gap-3 mb-3 cursor-pointer group">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 accent-teal-600 social-check"
+                                        value="Agua Potable">
+                                    <span
+                                        class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Suministro
+                                        de Agua (Pipa)</span>
+                                </label>
+                                <label class="flex items-start gap-3 cursor-pointer group">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 accent-teal-600 social-check"
+                                        value="Alojamiento Temporal">
+                                    <span
+                                        class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Alojamiento
+                                        temporal</span>
+                                </label>
+                            </div>
+
+                            <div
+                                class="bg-white p-5 rounded-lg shadow-sm border border-teal-100 hover:border-teal-300 transition-colors">
+                                <h4 class="font-bold text-gray-800 mb-4 border-b pb-2 flex items-center gap-2"><i
+                                        class="fa-solid fa-hands-holding-circle text-teal-500"></i> Inclusión y Derecho
+                                </h4>
+                                <label class="flex items-start gap-3 mb-3 cursor-pointer group">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 accent-teal-600 social-check"
+                                        value="Traductor">
+                                    <span
+                                        class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Traductor
+                                        / Mediador Cultural</span>
+                                </label>
+                                <label class="flex items-start gap-3 cursor-pointer group">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 accent-teal-600 social-check"
+                                        value="Transporte">
+                                    <span
+                                        class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Transporte
+                                        sanitario no urgente</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="social-output"
+                            class="hidden mt-6 bg-yellow-50 border border-yellow-200 p-5 rounded-lg text-sm text-yellow-900 shadow-sm flex items-start gap-3 fade-in">
+                            <i class="fa-solid fa-ticket text-xl mt-1 text-yellow-600"></i>
+                            <div>
+                                <div class="font-bold text-lg mb-1">Folio CCSB-TAM-2024-889 GENERADO</div>
+                                <p>Se ha generado la solicitud de gestión para: <span id="social-items-list"
+                                        class="font-bold border-b border-yellow-500"></span>.</p>
+                                <p class="mt-2 text-xs text-yellow-700 italic">Entidad receptora: DIF Estatal /
+                                    Bienestar Social. Tiempo estimado de respuesta: 24h.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </main>
+
+        <div
+            class="md:hidden fixed bottom-0 w-full bg-white border-t border-gray-200 flex justify-around p-2 z-30 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+            <button onclick="switchTab('flowchart')" id="mob-flowchart"
+                class="flex flex-col items-center text-[10px] text-red-700 font-bold p-2"><i
+                    class="fa-solid fa-user-doctor text-xl mb-1"></i>Vía</button>
+            <button onclick="switchTab('checklists')" id="mob-checklists"
+                class="flex flex-col items-center text-[10px] text-gray-400 font-medium p-2"><i
+                    class="fa-solid fa-list-check text-xl mb-1"></i>Listas</button>
+            <button onclick="switchTab('goli')" id="mob-goli"
+                class="flex flex-col items-center text-[10px] text-gray-400 font-medium p-2"><i
+                    class="fa-solid fa-network-wired text-xl mb-1"></i>GOLI</button>
+            <button onclick="switchTab('kpi')" id="mob-kpi"
+                class="flex flex-col items-center text-[10px] text-gray-400 font-medium p-2"><i
+                    class="fa-solid fa-chart-line text-xl mb-1"></i>KPI</button>
+            <button onclick="switchTab('regions')" id="mob-regions"
+                class="flex flex-col items-center text-[10px] text-gray-400 font-medium p-2"><i
+                    class="fa-solid fa-map text-xl mb-1"></i>Mapa</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATOS ---
+        const checklists = {
+            primer: [
+                "Sospecha clínica documentada (fecha inicio fiebre/rash)",
+                "Aislamiento inmediato (aire) + cubrebocas",
+                "Aviso inmediato a Epidemiología (Jurisdicción)",
+                "Registro de signos vitales completos",
+                "Evaluación de riesgo (embarazo/inmunocompromiso)",
+                "Toma de muestra (Suero IgM) realizada",
+                "Etiquetado correcto + folio",
+                "Plan entregado: Aislamiento domiciliario o Referencia"
+            ],
+            hospital: [
+                "Aislamiento (aire) mantenido rigurosamente",
+                "Evaluación complicaciones (neumonía, neuro, etc.)",
+                "Vitamina A administrada según edad",
+                "Interconsulta realizada (Infectología/Pediatría)",
+                "Confirmación de notificación a Epidemiología",
+                "Plan de alta coordinado con aislamiento"
+            ],
+            epi: [
+                "Entrevista: Línea de tiempo (viajes, visitas)",
+                "Listado completo de contactos (hogar/trabajo/sala)",
+                "Clasificación de contactos (alto riesgo vs general)",
+                "Bloqueo vacunal SRP iniciado (≤72h)",
+                "Inmunoglobulina gestionada para elegibles (≤6d)",
+                "Micro-área definida para cerco sanitario",
+                "Comunicación de riesgo activada localmente"
+            ]
+        };
+
+        // --- LÓGICA ---
+        function switchTab(tabId) {
+            // IDs de todas las vistas
+            const views = ['flowchart', 'checklists', 'regions', 'shelters', 'kpi', 'goli'];
+
+            views.forEach(id => {
+                // Ocultar vista
+                const el = document.getElementById('view-' + id);
+                if (el) el.classList.add('hidden');
+
+                // Resetear botón escritorio
+                const navBtn = document.getElementById('nav-' + id);
+                if (navBtn) {
+                    navBtn.classList.remove('tab-active', 'bg-red-50', 'text-red-700');
+                    navBtn.classList.add('tab-inactive');
+                }
+
+                // Resetear botón móvil (si existe)
+                const mobBtn = document.getElementById('mob-' + id);
+                if (mobBtn) {
+                    mobBtn.classList.remove('text-red-700', 'font-bold');
+                    mobBtn.classList.add('text-gray-400', 'font-medium');
+                }
+            });
+
+            // Mostrar vista seleccionada
+            const selectedView = document.getElementById('view-' + tabId);
+            if (selectedView) selectedView.classList.remove('hidden');
+
+            // Activar botón escritorio
+            const activeNav = document.getElementById('nav-' + tabId);
+            if (activeNav) {
+                activeNav.classList.add('tab-active', 'bg-red-50', 'text-red-700');
+                activeNav.classList.remove('tab-inactive');
+            }
+
+            // Activar botón móvil
+            const activeMob = document.getElementById('mob-' + tabId);
+            if (activeMob) {
+                activeMob.classList.add('text-red-700', 'font-bold');
+                activeMob.classList.remove('text-gray-400');
+            }
+
+            if (tabId === 'checklists') renderChecklist();
+        }
+
+        function toggleFlow(type) {
+            document.getElementById('flow-suspected').classList.add('hidden');
+            document.getElementById('flow-standard').classList.add('hidden');
+
+            if (type === 'suspected') {
+                document.getElementById('flow-suspected').classList.remove('hidden');
+            } else {
+                document.getElementById('flow-standard').classList.remove('hidden');
+            }
+        }
+
+        function renderChecklist() {
+            const type = document.getElementById('checklist-selector').value;
+            const container = document.getElementById('checklist-container');
+            const items = checklists[type];
+
+            container.innerHTML = ''; // Limpiar
+
+            items.forEach((item, index) => {
+                const id = `chk-${type}-${index}`;
+                const html = `
+                <label class="checkbox-wrapper cursor-pointer block relative group">
+                    <input type="checkbox" class="absolute opacity-0 w-full h-full cursor-pointer z-10" onchange="updateProgress()">
+                    <div class="flex items-center p-4 bg-white border border-gray-200 rounded-lg group-hover:border-blue-300 transition-all shadow-sm">
+                        <div class="w-6 h-6 border-2 border-gray-300 rounded flex items-center justify-center mr-3 bg-gray-50 group-hover:bg-white flex-shrink-0">
+                            <i class="fa-solid fa-check text-white opacity-0 text-sm transition-opacity"></i>
+                        </div>
+                        <span class="text-sm text-gray-700 font-medium select-none">${item}</span>
+                    </div>
+                </label>
+            `;
+                container.innerHTML += html;
+            });
+
+            // Toggle signos vitales
+            const vitals = document.getElementById('vitals-section');
+            if (type === 'epi') vitals.classList.add('hidden');
+            else vitals.classList.remove('hidden');
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const container = document.getElementById('checklist-container');
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            const checked = container.querySelectorAll('input[type="checkbox"]:checked');
+
+            const percent = checkboxes.length === 0 ? 0 : Math.round((checked.length / checkboxes.length) * 100);
+
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('progress-text').innerText = percent + '%';
+
+            // Cambiar color de barra al completar
+            const bar = document.getElementById('progress-bar');
+            if (percent === 100) {
+                bar.classList.remove('bg-blue-600');
+                bar.classList.add('bg-green-500');
+                document.getElementById('progress-text').classList.replace('text-blue-600', 'text-green-600');
+            } else {
+                bar.classList.add('bg-blue-600');
+                bar.classList.remove('bg-green-500');
+                document.getElementById('progress-text').classList.replace('text-green-600', 'text-blue-600');
+            }
+        }
+
+        function generarRecetaSocial() {
+            const checks = document.querySelectorAll('.social-check:checked');
+            const listSpan = document.getElementById('social-items-list');
+            const output = document.getElementById('social-output');
+
+            if (checks.length === 0) {
+                alert("Por favor seleccione al menos un apoyo social para generar la prescripción.");
+                return;
+            }
+
+            const items = Array.from(checks).map(c => c.value).join(", ");
+            listSpan.innerText = items;
+            output.classList.remove('hidden');
+        }
+
+        // Inicializar
+        renderChecklist();
+    </script>
+</body>
+
+</html>

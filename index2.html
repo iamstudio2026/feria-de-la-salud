@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feria de la Salud - Lazos del Bienestar (SNSP Tamaulipas)</title>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Paleta Institucional SNSP / Gobierno de México */
+            --guinda: #9b2247;
+            --guinda-dark: #611232;
+            --dorado: #a57f2c;
+            --dorado-light: #e6d194;
+            --verde: #1e5b4f;
+            --verde-dark: #002f2a;
+            --gris: #98989A;
+            --negro: #161a1d;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+
+        .font-patria {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239b2247' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .section-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- CALENDARIO UNIFICADO (DOCX + Espacio para Imagen) ---
+        // He integrado las fechas del documento DOCX. 
+        // Nota: Las fechas de la imagen se deben verificar e integrar aquí si son adicionales.
+        const calendarData = [
+            { date: "26 Feb", year: "2026", city: "Ciudad Victoria", type: "Feria Regional", status: "Propróximo" },
+            { date: "11 Mar", year: "2026", city: "Altamira", type: "Feria de Salud", status: "Programado" },
+            { date: "25 Mar", year: "2026", city: "El Mante", type: "Feria de Salud", status: "Programado" },
+            { date: "17 Jun", year: "2026", city: "Padilla", type: "Feria de Salud", status: "Programado" },
+            { date: "09 Ago", year: "2026", city: "Jaumave", type: "Feria de Salud", status: "Programado" },
+            { date: "09 Sep", year: "2026", city: "Ciudad Victoria", type: "Feria de Seguimiento", status: "Programado" },
+            { date: "19 Oct", year: "2026", city: "San Fernando", type: "Feria de Salud", status: "Programado" },
+            { date: "28 Oct", year: "2026", city: "Matamoros", type: "Macro Feria", status: "Programado" },
+            { date: "11 Nov", year: "2026", city: "Reynosa", type: "Feria Fronteriza", status: "Programado" },
+            { date: "12 Nov", year: "2026", city: "Tampico", type: "Cierre Anual", status: "Programado" }
+        ];
+
+        // --- MODELO GOLI: Áreas reestructuradas ---
+        const areasData = [
+            {
+                id: 1,
+                goli: "INTELIGENCIA", // GOLI: Inteligencia
+                title: "Filtro Inteligente y Vinculación",
+                subtitle: "Primer Contacto",
+                icon: "fa-seedling", // Representa inicio/crecimiento
+                color: "bg-[#9b2247]", // Guinda
+                lightColor: "bg-red-50",
+                description: "Uso de datos epidemiológicos para la detección activa de riesgos.",
+                services: [
+                    {
+                        title: "Triaje Comunitario (Red de Voceros)",
+                        desc: "Identificación de usuarios prioritarios basada en censo previo (Inteligencia Epidemiológica).",
+                        icon: "fa-users-viewfinder"
+                    },
+                    {
+                        title: "Registro Único Nominal",
+                        desc: "Alta en plataforma SNSP para trazabilidad del paciente en el sistema de salud.",
+                        icon: "fa-id-card-clip"
+                    },
+                    {
+                        title: "Somatometría Avanzada",
+                        desc: "Detección temprana de hipertensión, diabetes y obesidad (toma de constantes vitales).",
+                        icon: "fa-heart-pulse"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                goli: "OPERACIONES", // GOLI: Operaciones
+                title: "Gestión Clínica Resolutiva",
+                subtitle: "Atención MAS-BIENESTAR",
+                icon: "fa-user-doctor",
+                color: "bg-[#1e5b4f]", // Verde
+                lightColor: "bg-teal-50",
+                description: "Consulta médica integral enfocada en la resolución inmediata (One-Stop Shop).",
+                services: [
+                    {
+                        title: "Medicina General e Integrada",
+                        desc: "Consulta resolutiva con enfoque preventivo y curativo.",
+                        icon: "fa-stethoscope"
+                    },
+                    {
+                        title: "Unidades Móviles Especializadas",
+                        desc: "Mastografías, salud dental y salud visual itinerante.",
+                        icon: "fa-truck-medical"
+                    },
+                    {
+                        title: "Salud Mental y Adicciones",
+                        desc: "Intervención en crisis y consejería familiar.",
+                        icon: "fa-brain"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                goli: "LOGÍSTICA", // GOLI: Logística
+                title: "Soporte y Prescripción Social",
+                subtitle: "Insumos para el Bienestar",
+                icon: "fa-boxes-packing",
+                color: "bg-[#a57f2c]", // Dorado
+                lightColor: "bg-yellow-50",
+                description: "Gestión eficiente de la cadena de suministro de salud y apoyos.",
+                services: [
+                    {
+                        title: "Farmacia Itinerante Gratuita",
+                        desc: "Surtimiento inmediato de recetas al 100% en sitio.",
+                        icon: "fa-pills"
+                    },
+                    {
+                        title: "Gestión de Patrimonio (Apoyos)",
+                        desc: "Entrega o trámite de lentes, bastones y sillas de ruedas.",
+                        icon: "fa-wheelchair"
+                    },
+                    {
+                        title: "Red de Muestras de Laboratorio",
+                        desc: "Logística para toma y traslado de muestras a laboratorios centrales.",
+                        icon: "fa-vial"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                goli: "GERENCIA (CeCoSaBi)", // GOLI: Gerencia
+                title: "Continuidad de Atención (CeCoSaBi)",
+                subtitle: "Coordinación y Cierre de Brechas",
+                icon: "fa-network-wired",
+                color: "bg-[#161a1d]", // Negro
+                lightColor: "bg-gray-200",
+                description: "El CeCoSaBi asegura que nadie se vaya sin una ruta clara de seguimiento.",
+                services: [
+                    {
+                        title: "Referencia Efectiva",
+                        desc: "Gestión de citas para especialidades en hospitales de 2do y 3er nivel.",
+                        icon: "fa-hospital-user"
+                    },
+                    {
+                        title: "Telemedicina Asistida",
+                        desc: "Conexión remota con especialistas para casos complejos en sitio.",
+                        icon: "fa-video"
+                    },
+                    {
+                        title: "Navegación del Paciente",
+                        desc: "Acompañamiento administrativo para trámites y validación de derechos.",
+                        icon: "fa-folder-open"
+                    }
+                ]
+            }
+        ];
+
+        // --- COMPONENTES ---
+
+        const Header = () => (
+            <header className="bg-white shadow-md sticky top-0 z-50">
+                <div className="bg-[#002f2a] text-white text-xs py-2 text-center tracking-wide">
+                    SERVICIO NACIONAL DE SALUD PÚBLICA • TAMAULIPAS
+                </div>
+                <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+                    <div className="flex items-center gap-4">
+                        <img src="https://framework-gb.cdn.gob.mx/landing/img/logoheader.svg" alt="Gobierno de México" className="h-8 md:h-10 opacity-80" />
+                        <div className="h-8 w-px bg-gray-300 hidden md:block"></div>
+                        <div className="hidden md:block">
+                            <h1 className="text-[#9b2247] font-bold text-lg leading-none">SNSP</h1>
+                            <p className="text-xs text-gray-500 uppercase tracking-widest">Coordinación Estatal</p>
+                        </div>
+                    </div>
+                    <div className="text-right hidden md:block">
+                        <p className="text-[#a57f2c] font-patria font-bold text-lg">2026</p>
+                        <p className="text-[10px] text-gray-400 uppercase">Año de Margarita Maza</p>
+                    </div>
+                </div>
+                <div className="h-1 bg-gradient-to-r from-[#1e5b4f] via-[#9b2247] to-[#a57f2c]"></div>
+            </header>
+        );
+
+        const Hero = () => (
+            <section className="relative bg-[#1e5b4f] text-white py-20 overflow-hidden">
+                <div className="absolute inset-0 opacity-10 bg-pattern"></div>
+                <div className="container mx-auto px-4 relative z-10 text-center">
+                    <span className="inline-block py-1 px-3 rounded-full bg-[#a57f2c] text-white text-xs font-bold mb-4 tracking-wider shadow-lg">
+                        ESTRATEGIA GOLI + CECOSABI
+                    </span>
+                    <h1 className="text-4xl md:text-6xl font-patria font-bold mb-4 leading-tight">
+                        Ferias de la Salud <br />
+                        <span className="text-[#e6d194]">"Lazos del Bienestar"</span>
+                    </h1>
+                    <p className="max-w-2xl mx-auto text-lg text-gray-200 mb-8 font-light">
+                        Acercamos la salud a tu comunidad con inteligencia, capacidad resolutiva y la garantía de continuidad que ofrece el CeCoSaBi.
+                    </p>
+                    <div className="flex justify-center gap-4">
+                        <button className="bg-[#9b2247] hover:bg-[#611232] text-white px-8 py-3 rounded shadow-lg transition font-semibold">
+                            Ver Calendario
+                        </button>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Calendar = () => (
+            <section className="py-16 bg-white">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-patria font-bold text-[#161a1d]">Calendario 2026</h2>
+                        <div className="h-1 w-20 bg-[#a57f2c] mx-auto mt-4"></div>
+                        <p className="mt-4 text-gray-600">Ruta de intervención territorial programada.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {calendarData.map((event, idx) => (
+                            <div key={idx} className="bg-gray-50 rounded-xl p-6 border-l-4 border-[#9b2247] hover:shadow-xl transition-shadow duration-300 relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition">
+                                    <i className="fa-solid fa-calendar-check text-6xl text-[#9b2247]"></i>
+                                </div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="text-center bg-white p-2 rounded shadow-sm min-w-[60px]">
+                                        <span className="block text-xl font-bold text-[#1e5b4f]">{event.date.split(" ")[0]}</span>
+                                        <span className="block text-xs uppercase text-gray-500 font-bold">{event.date.split(" ")[1]}</span>
+                                    </div>
+                                    <span className={`text-xs font-bold px-2 py-1 rounded ${event.status === 'Próximo' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-800'}`}>
+                                        {event.status}
+                                    </span>
+                                </div>
+                                <h3 className="text-xl font-bold text-[#161a1d] mb-1">{event.city}</h3>
+                                <p className="text-[#a57f2c] font-medium text-sm mb-2">{event.type}</p>
+                                <div className="flex items-center text-xs text-gray-500 gap-2">
+                                    <i className="fa-solid fa-location-dot"></i>
+                                    <span>Sede por confirmar</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const GOLIFlow = () => (
+            <section className="py-12 bg-gray-100">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-10">
+                        <h2 className="text-2xl font-bold text-[#161a1d]">Modelo de Gestión GOLI</h2>
+                        <p className="text-sm text-gray-600">Gerencia • Operaciones • Logística • Inteligencia</p>
+                    </div>
+                    {/* Flowchart Visual */}
+                    <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-0 relative">
+                        {areasData.map((area, idx) => (
+                            <div key={idx} className="flex flex-col items-center z-10 w-full md:w-1/4">
+                                <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-xl shadow-lg mb-3 ${area.color} border-4 border-white`}>
+                                    <i className={`fa-solid ${area.icon}`}></i>
+                                </div>
+                                <h4 className="font-bold text-[#161a1d] text-sm uppercase tracking-wider">{area.goli}</h4>
+                                <p className="text-xs text-gray-500 text-center px-4">{area.title}</p>
+                            </div>
+                        ))}
+                        {/* Connecting Line (Desktop) */}
+                        <div className="hidden md:block absolute top-8 left-[12%] right-[12%] h-1 bg-gray-300 z-0"></div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const ServiceArea = ({ area, isReverse }) => (
+            <div className={`py-16 ${area.lightColor}`}>
+                <div className="container mx-auto px-4">
+                    <div className={`flex flex-col md:flex-row gap-12 items-center ${isReverse ? 'md:flex-row-reverse' : ''}`}>
+
+                        {/* Info Column */}
+                        <div className="w-full md:w-1/3">
+                            <div className="flex items-center gap-3 mb-4">
+                                <span className={`px-3 py-1 rounded text-xs font-bold text-white ${area.color}`}>
+                                    {area.goli}
+                                </span>
+                                <div className="h-px bg-gray-400 flex-grow"></div>
+                            </div>
+                            <h2 className={`text-3xl md:text-4xl font-patria font-bold mb-4 text-gray-900`}>
+                                {area.title}
+                            </h2>
+                            <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+                                {area.description}
+                            </p>
+                            <ul className="space-y-3">
+                                {area.services.map((srv, idx) => (
+                                    <li key={idx} className="flex items-start gap-3">
+                                        <div className={`mt-1 w-6 h-6 rounded-full ${area.color} flex items-center justify-center flex-shrink-0`}>
+                                            <i className="fa-solid fa-check text-white text-[10px]"></i>
+                                        </div>
+                                        <div>
+                                            <strong className="block text-gray-900 text-sm">{srv.title}</strong>
+                                            <span className="text-xs text-gray-600">{srv.desc}</span>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Visual Column (Abstract Card) */}
+                        <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {area.services.map((srv, idx) => (
+                                <div key={idx} className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition border-t-4" style={{ borderColor: area.id === 1 ? '#9b2247' : area.id === 2 ? '#1e5b4f' : area.id === 3 ? '#a57f2c' : '#161a1d' }}>
+                                    <i className={`fa-solid ${srv.icon} text-3xl mb-4 opacity-80`} style={{ color: area.id === 1 ? '#9b2247' : area.id === 2 ? '#1e5b4f' : area.id === 3 ? '#a57f2c' : '#161a1d' }}></i>
+                                    <h3 className="font-bold text-gray-800 mb-2">{srv.title}</h3>
+                                    <p className="text-sm text-gray-500">{srv.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        );
+
+        const Footer = () => (
+            <footer className="bg-[#161a1d] text-white py-12 border-t-8 border-[#a57f2c]">
+                <div className="container mx-auto px-4 text-center">
+                    <div className="flex flex-col md:flex-row justify-center items-center gap-8 mb-8">
+                        <img src="logo SNSP.png" alt="SNSP" className="h-12 brightness-0 invert opacity-80" />
+                        <div className="h-8 w-px bg-gray-700 hidden md:block"></div>
+                        <div className="text-left">
+                            <p className="font-bold text-[#a57f2c]">CeCoSaBi Tamaulipas</p>
+                            <p className="text-sm text-gray-400">Centro Coordinador de Salud para el Bienestar</p>
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                        Esta feria es una actividad pública ajena a cualquier partido político. Queda prohibido el uso para fines distintos a los establecidos en el programa.
+                    </p>
+                    <p className="text-xs text-gray-600 mt-4">© 2026 Gobierno de México</p>
+                </div>
+            </footer>
+        );
+
+        const App = () => {
+            return (
+                <div className="min-h-screen flex flex-col font-sans">
+                    <Header />
+                    <Hero />
+                    <Calendar />
+                    <GOLIFlow />
+                    <div id="modelo-atencion">
+                        {areasData.map((area, index) => (
+                            <ServiceArea key={area.id} area={area} isReverse={index % 2 !== 0} />
+                        ))}
+                    </div>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
