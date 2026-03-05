@@ -1,0 +1,201 @@
+0: PROPUESTA TÉCNICAEstrategia Salud Casa por Casa/Componente Surtimiento de MedicamentosCiudad de México
+1: 
+2: 1. Antecedentes 
+3: En el Estado de México, la estrategia Salud Casa por Casa implementa el componente de surtimiento de medicamentos a través de Farmacias del Bienestar. Se han identificado brechas entre el número de recetas emitidas y el número recetas surtidas, lo cual sugiere una pérdida en la cobertura efectiva del proceso.
+4: Actualmente no existe un sistema formal de trazabilidad que permita monitorear de manera sistemática la cascada operativa (visita, receta, pedido, disponibilidad, surtimiento, recepción). La ausencia de instrumentos estandarizados y de indicadores claros limita la capacidad de identificar puntos críticos de ruptura, asignar responsabilidades y tomar decisiones basadas en evidencia.
+5: Desde el enfoque de evaluación de procesos en salud pública, antes de plantear ajustes estructurales o evaluaciones de impacto, es metodológicamente pertinente analizar cómo se está implementando el programa en la práctica (modelo operativo actual), identificar barreras y estimar la cobertura efectiva del surtimiento.
+6: 2. Planteamiento de problema
+7: En la implementación del componente de surtimiento de medicamentos del programa Salud Casa por Casa en el Estado de México, se ha observado una discrepancia entre el número de recetas emitidas y el número de recetas efectivamente surtidas en Farmacias del Bienestar. Esta brecha representa una alteración en la cadena operativa de provisión farmacéutica y compromete la cobertura efectiva del tratamiento indicado. La problemática no se limita a la diferencia numérica entre recetas emitidas y surtidas, sino que involucra múltiples dimensiones Estructurales, Operativas y Experiencias.
+8: 
+9: Nivel 1: Fallas Directas del Proceso (Dimensión Operativa).
+10: En el nivel operativo inmediato se identifican fallas que impactan de manera directa el surtimiento del medicamento. Estas incluyen errores en la prescripción médica, inconsistencias en la conformación de paquetes individualizados, retrasos en el envío desde almacenes, falta de sincronización entre la demanda generada y el surtimiento disponible, así como demoras logísticas en los distintos nodos de distribución. Asimismo, se observan deficiencias en el registro adecuado de las recetas y la imposibilidad de consultar en tiempo real el estado del surtimiento, lo que limita la trazabilidad del proceso. Estas situaciones constituyen rupturas concretas dentro de la cadena operativa y representan puntos críticos donde el flujo del medicamento puede interrumpirse antes de llegar al derechohabiente. En materia de sistemas de información, se identifica la inexistencia de un sistema digital integral que permita seguimiento en tiempo real, lo que genera riesgos de duplicidad o pérdida de información, dependencia de registros manuales en hojas de cálculo y manejo físico de formatos. Estas condiciones incrementan la probabilidad de errores administrativos y dificultan la supervisión operativa.
+11: 
+12: Nivel 2: Fallas Organizacionales y de Implementación (Dimensión Estructural)En un segundo nivel se ubican las fallas de carácter organizacional y estructural que condicionan la aparición de rupturas operativas. En términos de fragmentación institucional, se observa una falta de alineación entre las distintas dependencias involucradas (Secretaría de Bienestar y Birmex), procesos fragmentados sin delimitación clara de responsabilidades, ausencia de protocolos compartidos y carencia de mecanismos formales de vinculación interinstitucional. Falta de información de surtimiento y/o requisición de insumos en las farmacias. En cuanto al recurso humano, se documentan factores que afectan la fidelidad de implementación, tales como rotación frecuente del personal joven, insuficiente capacitación (incluyendo en farmacología), desconocimiento del proceso operativo completo, falta de personal especializado en captura y dificultades para identificar oportunamente medicamentos faltantes. Estas debilidades estructurales impactan la calidad del proceso y aumentan la variabilidad en la ejecución.
+13: 
+14: Nivel 3: Factores Contextuales y Externos (Dimensión de experiencias en personal y usuarios)Finalmente, existen factores externos que, aunque no forman parte directa de la estructura organizacional del programa, influyen en su desempeño. Entre ellos se encuentran amenazas antropogénicas, fenómenos naturales, limitaciones de infraestructura y problemas de proveeduría asociados a IMSS-B. Asimismo, a nivel del usuario, se observan elementos como cambios de domicilio no notificados, desconfianza hacia el programa, baja adherencia derivada de efectos secundarios o confusión en la indicación terapéutica, y ausencia de acompañamiento familiar para realizar trámites. Estos factores pueden amplificar o agravar las fallas operativas previamente descritas.
+15: La interacción de estas tres dimensiones causales deriva en la pérdida de cobertura efectiva, manifestada en derechohabientes que no reciben oportunamente su medicamento. Ello genera disminución en la confianza institucional, ineficiencia operativa, dificultades para evaluar el desempeño del programa y, en última instancia, riesgos sanitarios derivados de la interrupción terapéutica. Dado a lo anterior, la pregunta que se necesita responder es, ¿Cuáles son las causas operativas, estructurales y de experiencia que explican la no conversión de recetas emitidas en recetas efectivamente surtidas en Farmacias del Bienestar del Edo de México?
+16: 
+17: 3. Justificación
+18: El surtimiento efectivo de medicamentos constituye un componente crítico en la continuidad terapéutica y en la garantía del acceso efectivo a los servicios de salud. La identificación precisa de las causas que explican la brecha entre recetas emitidas y surtidas es indispensable para orientar intervenciones correctivas basadas en evidencia.
+19: El análisis integrado de información administrativa (recetas emitidas, recetas surtidas, inventarios y catálogo farmacéutico) permite evaluar la consistencia interna del sistema de provisión y determinar la contribución relativa de factores estructurales y operativos. Asimismo, la incorporación de un componente cualitativo complementario posibilita comprender la experiencia del usuario y personal para contextualizar los hallazgos cuantitativos.
+20: Esta evaluación se inscribe dentro del marco de evaluación de procesos en salud pública, orientada a examinar la fidelidad de implementación, la congruencia entre diseño operativo y ejecución, y los determinantes estructurales del desempeño del sistema.
+21: 
+22: 4. Objetivos
+23: 4.1 Objetivo General
+24: Identificar y clasificar las causas operativas, estructurales y de experiencia del usuario que explican la brecha entre recetas emitidas y recetas surtidas en Farmacias del Bienestar en la Ciudad de México, con el fin de generar recomendaciones técnicas accionables para la mejora del proceso de surtimiento.
+25: 
+26: 4.2 Objetivos Específicos
+27: 1. Definir indicadores mínimos de estructura, operativos y experiencia.
+28: 2. Estimar la proporción real de recetas emitidas que culminan en surtimiento efectivo, diferenciando surtimiento completo, parcial y no surtimiento.
+29: 3. Identificar el modelo de abastecimiento vigente (surtimiento fijo, surtimiento por requisición o esquema mixto) y analizar su congruencia con la demanda real derivada de las recetas emitidas.
+30: 4. Explorar, mediante un componente cualitativo, la experiencia del usuario/personal de farmacia en relación con el proceso de surtimiento, particularmente en los casos de no entrega del medicamento.
+31: 5. Diseñar instrumentos estandarizados de recolección de información (base de datos, personal y usuarios).
+32: 6. Proponer un sistema continuo de monitoreo operativo basado en indicadores claros.
+33: 
+34: 5. Metodología
+35: 5.1 Diseño del Estudio
+36: El estudio se estructurará a partir de tres dimensiones analíticas previamente definidas: dimensión operativa, dimensión estructural y dimensión contextual. Cada dimensión contará con un instrumento específico de recolección de información cuantitativa, complementado con análisis administrativo cuando corresponda.
+37: El diseño general será observacional, no experimental, con enfoque mixto secuencial explicativo. El componente cuantitativo constituirá el eje central del análisis, mientras que el componente cualitativo se integrará para profundizar en hallazgos específicos.
+38: 
+39: Dimensión Operativa
+40: Esta dimensión se orienta a identificar rupturas concretas en la cadena de surtimiento, desde la emisión de la receta hasta la entrega del medicamento al derechohabiente.
+41: Estrategia metodológica
+42: Se utilizarán dos fuentes complementarias:
+43: Análisis de bases administrativas para identificar discrepancias entre recetas emitidas y recetas surtidas, tiempos de procesamiento y patrones por unidad operativa.
+44: Instrumento cuantitativo estructurado dirigido a personal involucrado en el proceso operativo (farmacia y logística), con el fin de medir frecuencia de errores en registro, demoras en envío, inconsistencias en conformación de paquetes y limitaciones en trazabilidad.
+45: 
+46: Unidad de análisis
+47: Receta emitida (para análisis administrativo).
+48: Personal operativo (para instrumento estructurado).
+49: El objetivo de esta dimensión es determinar en qué punto de la cadena se produce la interrupción y si esta obedece a errores de prescripción, fallas de registro, retrasos logísticos o ausencia de sistemas de información integrados.
+50: Dimensión Estructural
+51: Esta dimensión analiza factores estructurales que condicionan la ocurrencia de fallas operativas, incluyendo coordinación interinstitucional, modelo de abastecimiento y recurso humano.
+52: 
+53: Estrategia metodológica
+54: Se aplicará un instrumento cuantitativo estructurado al personal de farmacia y al personal que realiza visitas domiciliarias, orientado a medir:
+55: Conocimiento del catálogo autorizado.
+56: Tipo de modelo de surtimiento (fijo, requisición o mixto).
+57: Procedimientos para solicitud de insumos.
+58: Frecuencia de quiebres.
+59: Capacitación recibida.
+60: Claridad en responsabilidades.
+61: Disponibilidad de información de surtimiento.
+62: Adicionalmente, se analizará la congruencia entre el catálogo autorizado por farmacia y los medicamentos efectivamente prescritos.
+63: 
+64: Unidad de análisis
+65: Unidad operativa (farmacia).
+66: Personal responsable de visitas.
+67: Catálogo de las farmacias.
+68: El propósito es determinar si el no surtimiento es consecuencia de desalineación estructural, insuficiencia de catálogo, deficiencias en abastecimiento o debilidades en capacitación y gobernanza.
+69: 
+70: 
+71: 
+72: Dimensión Percepción/Experiencial
+73: Esta dimensión se centra en la percepción y experiencia tanto de los usuarios como del personal operativo, considerando que factores externos y relacionales pueden incidir en la no conversión de receta a surtimiento.
+74: La dimensión experiencial se compone de:
+75: Medición cuantitativa de percepción y barreras.
+76: Análisis cualitativo interpretativo posterior.
+77: 
+78: Componente Cuantitativo
+79: Se aplicarán instrumentos cuantitativos estructurados tanto a usuarios como a personal operativo. Estos instrumentos medirán variables previamente definidas y codificables, no narrativas abiertas. Se utilizarán escalas ordinales estructuradas para medir percepción y aceptabilidad del proceso.
+80: 
+81: 1. Instrumento Cuantitativo para Usuarios
+82: Medirá variables como:
+83: Intento de recolección del medicamento (sí/no).
+84: Si acudió a la farmacia asignada.
+85: Información recibida sobre disponibilidad (sí/no).
+86: Si le informaron que el medicamento estaba fuera de catálogo.
+87: Comprensión del procedimiento de surtimiento.
+88: Tiempo de espera.
+89: Percepción del trato.
+90: Confianza en el proceso.
+91: Dificultades logísticas (distancia, horarios, acompañamiento).
+92: *Estas variables permitirán clasificar cuantitativamente las causas del no surtimiento como:
+93: No acudió a recoger.
+94: Acudió y no había medicamento.
+95: Desinformación.
+96: Dificultad logística.
+97: Desconfianza.
+98: Confusión en indicaciones.
+99: El instrumento buscará medición estructurada de frecuencia y distribución de barreras.
+100: 
+101: 2. Instrumento Cuantitativo para Personal Operativo
+102: Se aplicará a personal de farmacia y personal que realiza visitas domiciliarias.
+103: Medirá variables como:
+104: Conocimiento del catálogo autorizado.
+105: Frecuencia reportada de recetas fuera de catálogo.
+106: Reporte de quiebres.
+107: Dificultad para consultar estatus de surtimiento.
+108: Problemas de coordinación interinstitucional.
+109: Retroalimentación recibida sobre no surtimiento.
+110: Percepción de suficiencia de capacitación.
+111: Claridad en responsabilidades.
+112: Este instrumento permitirá medir cuantitativamente la percepción estructural y operativa del personal.
+113: 
+114: Componente Cualitativo (Submuestra)
+115: El componente cualitativo no será el instrumento principal de la dimensión experiencial. Será un complemento explicativo posterior.
+116: Se seleccionará una submuestra de usuarios y personal en función de patrones detectados en el análisis cuantitativo. Las entrevistas cualitativas permitirán:
+117: Profundizar en contradicciones.
+118: Comprender dinámicas organizacionales complejas.
+119: Identificar mecanismos no capturados en preguntas cerradas.
+120: El método cualitativo se utilizará para explicar hallazgos, no para reemplazar la medición estructurada.
+121: 
+122: COMENTARIOS :
+123: Si se evaluara la brecha entre recetas emitidas y surtidas, pero no define con precisión qué significa “surtimiento”, se puede dividir en estas categorias:
+124: 
+125: Surtimiento completo
+126: 
+127: Surtimiento parcial
+128: 
+129: No surtimiento
+130: 
+131: 
+132: Se debe definir analiticamente, el acceso a medicamentos y esto puede ser a traves de una cascada de provisiones, que nos permita verificar en donde el proceso se interumpe,  ejemplo: 
+133: 1.- Emisión de la receta
+134: 2.-  Registro de receta
+135: 3.- Envíó a la farmacia
+136: 4.- Disponibilidad en inventario
+137: 5.- Surtimiento
+138: 6.- Recepción del usuario
+139: Nos falta delimitar la unidad de analisis administrativa si en este caso es la receta, podriamos  incluir  tambien, el medicamento que va en la receta.
+140: Medir el tiempo de surtimiento
+141: Ejemplo:
+142: 
+143: mismo día
+144: 
+145: 1–3 días
+146: 
+147: 4–7 días
+148: 
+149: más de 7 días
+150: 
+151: Podemos distinguir las causas de no surtimiento
+152: Causas estructurales
+153: 
+154: medicamento fuera de catálogo
+155: quiebre de stock
+156: error en prescripción
+157: 
+158: Causas operativas
+159: 
+160: receta no registrada
+161: paquete incompleto
+162: retraso logístico
+163: recetas duplicadas 
+164: recetas anuladas
+165: recetas corregidas
+166: 
+167: Causas del usuario
+168: 
+169: no acudió a recoger
+170: domicilio incorrecto
+171: abandono
+172: 
+173: Causas territoriales 
+174: ubicación de farmacias
+175: zonas operativas
+176: 
+177: 
+178: 
+179: 
+180: 
+181: Para el modelo analitico se pueden tomar las siguientes variables:
+182: Variable  Dependiente: el no surtimiento de recetas
+183: Variables independientes:
+184:  desabasto
+185: receta fuera de catálogo
+186: capacitación del personal
+187: distancia del usuario.
+188: 
+189: Propuesta de indicadores 
+190: PORCENTAJE DE RECETAS SURTIDASTOTAL  DE RECETAS SURTIDAS     X  100TOTAL DE RECETAS EMITIDASPORCENTAJE DE RECETAS SURTIDAS  PARCIALMENTETOTAL DE RECETAS SURTIDAS PARCIALMENTE   X 100TOTAL DE RECETAS EMITIDAS PORCENTAJE DE RECETAS NO  SURTIDAS TOTAL DE RECETAS NO SURTIDAS  X100TOTAL DE RECETAS EMITIDAS 
+191: 
+192: 
+193: 
+194: 
+195: 
+196: 
+197: 
+198: 
+199: 
+200: 

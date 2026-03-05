@@ -1,0 +1,176 @@
+Found 4 img tags with base64 src
+
+
+--- Image 0 ---
+  base64 length: 39898 chars
+  context before: ..."container mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3 flex-wrap justify-center md:justify-start">
+                
+  alt="DIF Tamaulipas"
+  class="h-8 md:h-12 object-contain"
+
+--- Image 1 ---
+  base64 length: 13890 chars
+  context before: ...o/8/xPZKTNK0IvAAAAAASUVORK5CYII="
+                    alt="DIF Tamaulipas" class="h-8 md:h-12 object-contain">
+                <div class="h-8 w-px bg-gray-300 hidden md:block"></div>
+                
+  alt="Secretaría de Salud"
+  class="h-10 md:h-14 object-contain"
+
+--- Image 2 ---
+  base64 length: 7210 chars
+  context before: ...n6GPgCXAAAAABJRU5ErkJggg=="
+                    alt="Secretaría de Salud" class="h-10 md:h-14 object-contain">
+                <div class="h-8 w-px bg-gray-300 hidden md:block"></div>
+                
+  alt="SNSP"
+  class="h-8 md:h-12 object-contain"
+
+--- Image 3 ---
+  base64 length: 2080938 chars
+  context before: ...YKKJok7T8jyx0QM0/7dCqPAxX6ARq4Iv73rr60mUKFGiRIkSJUqUKFGiRIkSJUqUKFGi5/X/YyszAkcp51MAAAAASUVORK5CYII="
+                    alt="SNSP" class="h-8 md:h-12 object-contain">
+            </div>
+            
+  alt="2026 - Año de Margarita Maza"
+  class="h-12 md:h-16 object-contain"
+
+
+=== HEADER SECTION (base64 replaced) ===
+<header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="bg-[#002f2a] text-white text-xs py-1 px-4 flex justify-center items-center gap-4">
+            <span>DIF Tamaulipas</span><span class="opacity-50">•</span>
+            <span>Secretaría de Salud Tamaulipas</span><span class="opacity-50">•</span>
+            <span>Servicio Nacional de Salud Pública</span>
+        </div>
+        <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-3 flex-wrap justify-center md:justify-start">
+                <img src="BASE64_DATA"
+                    alt="DIF Tamaulipas" class="h-8 md:h-12 object-contain">
+                <div class="h-8 w-px bg-gray-300 hidden md:block"></div>
+                <img src="BASE64_DATA"
+                    alt="Secretaría de Salud" class="h-10 md:h-14 object-contain">
+                <div class="h-8 w-px bg-gray-300 hidden md:block"></div>
+                <img src="BASE64_DATA"
+                    alt="SNSP" class="h-8 md:h-12 object-contain">
+            </div>
+            <img src="BASE64_DATA"
+                alt="2026 - Año de Margarita Maza" class="h-12 md:h-16 object-contain">
+        </div>
+        <div class="flex h-1 w-full">
+            <div class="w-1/3 bg-[#1e5b4f]"></div>
+            <div class="w-1/3 bg-[#9b2247]"></div>
+            <div class="w-1/3 bg-[#a57f2c]"></div>
+        </div>
+    </header>
+
+
+
+=== STYLE SECTION (first 2000 chars) ===
+<style>
+        :root {
+            --guinda: #9b2247;
+            --guinda-dark: #611232;
+            --dorado: #a57f2c;
+            --verde: #1e5b4f;
+            --gris: #98989A;
+            --negro: #161a1d
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f0f2f5;
+            margin: 0
+        }
+
+        .font-patria {
+            font-family: 'Playfair Display', serif
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, .85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, .3)
+        }
+
+        .stat-card {
+            transition: all .3s ease
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .12)
+        }
+
+        .counter {
+            font-variant-numeric: tabular-nums
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .fade-up {
+            animation: fadeUp .6s ease forwards;
+            opacity: 0
+        }
+
+        .fade-up:nth-child(1) {
+            animation-delay: .1s
+        }
+
+        .fade-up:nth-child(2) {
+            animation-delay: .2s
+        }
+
+        .fade-up:nth-child(3) {
+            animation-delay: .3s
+        }
+
+        .fade-up:nth-child(4) {
+            animation-delay: .4s
+        }
+
+        .fade-up:nth-child(5) {
+            animation-delay: .5s
+        }
+
+        .fade-up:nth-child(6) {
+            animation-delay: .6s
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .4
+            }
+        }
+
+        .pulse-dot {
+            animation: pulse-dot 2s infinite
+        }
+
+        .progress-bar {
+            transition: w
+
+Wrote logo_base64_0.txt (39898 chars)
+
+Wrote logo_base64_1.txt (13890 chars)
+
+Wrote logo_base64_2.txt (7210 chars)
+
+Wrote logo_base64_3.txt (2080938 chars)

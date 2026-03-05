@@ -1,0 +1,49 @@
+python : Traceback (most 
+recent call last):
+En línea: 1 Carácter: 1
++ python -c "import fitz; 
+doc = fitz.open('Nota 
+Informativa_Casa por Ca ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
+    + CategoryInfo          
+    : NotSpecified: (Trace  
+  back (most recent call    
+ last)::String) [], Remo    
+teException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+  File "<string>", line 1, 
+in <module>
+    import fitz; doc = 
+fitz.open('Nota 
+Informativa_Casa por Casa_Ce
+CoSaBi_10.02.2026.docx 
+(2).pdf'); text = ''; [text 
+:= text + page.get_text() 
+for page in doc]; 
+print(text)
+                            
+                            
+                            
+                            
+                            
+                      
+~~~~~^^^^^^
+  File "C:\Users\Lenovo\AppD
+ata\Local\Programs\Python\Py
+thon313\Lib\encodings\cp1252
+.py", line 19, in encode
+    return codecs.charmap_en
+code(input,self.errors,encod
+ing_table)[0]
+           ~~~~~~~~~~~~~~~~~
+~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^
+UnicodeEncodeError: 
+'charmap' codec can't 
+encode characters in 
+position 761-762: character 
+maps to <undefined>
